@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import Logo from '../Images/logo.png'
 import Logo1 from '../Images/logo1.png'
 import {
@@ -42,6 +43,7 @@ function classNames(...classes) {
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const navigate = useNavigate();
 
   return (
     <header className="bg-white drop-shadow-xl">
