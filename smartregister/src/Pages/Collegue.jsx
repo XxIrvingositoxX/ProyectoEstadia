@@ -46,11 +46,10 @@ function Collegue() {
                                 id="countries"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             >
-                                <option defaultValue>Choose a country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
+                                <option value="">Ama de llaves</option>
+                                <option value="">Sistemas</option>
+                                <option value="">BellBoys</option>
+                                <option value="">Telefonos</option>
                             </select>
                         </form>
                     </div>
@@ -80,50 +79,8 @@ function Collegue() {
                                 <Table.Cell className="p-2">10:24:23</Table.Cell>
                                 <Table.Cell className="p-2">6:22:32</Table.Cell>
                                 <Table.Cell className="p-2">Fuera</Table.Cell>
-                                <Table.Cell className="p-2">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4">Entrada</Button>
-                                </Table.Cell>
-                            </Table.Row>
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
-                                    12332
-                                </Table.Cell>
-                                <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Ama de llaves</Table.Cell>
-                                <Table.Cell className="p-2">29/06/2024</Table.Cell>
-                                <Table.Cell className="p-2">10:24:23</Table.Cell>
-                                <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Dentro</Table.Cell>
-                                <Table.Cell className="p-2">
-                                    <Button className="bg-red-700 hover:bg-red-800 pr-5 pl-5">Salida</Button>
-                                </Table.Cell>
-                            </Table.Row>
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
-                                    12332
-                                </Table.Cell>
-                                <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Ama de llaves</Table.Cell>
-                                <Table.Cell className="p-2">29/06/2024</Table.Cell>
-                                <Table.Cell className="p-2">10:24:23</Table.Cell>
-                                <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Fuera</Table.Cell>
-                                <Table.Cell className="p-2">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4">Entrada</Button>
-                                </Table.Cell>
-                            </Table.Row>
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
-                                    12332
-                                </Table.Cell>
-                                <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Ama de llaves</Table.Cell>
-                                <Table.Cell className="p-2">29/06/2024</Table.Cell>
-                                <Table.Cell className="p-2">10:24:23</Table.Cell>
-                                <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Fuera</Table.Cell>
-                                <Table.Cell className="p-2">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4">Entrada</Button>
+                                <Table.Cell className="p-2 place-content-center">
+                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-12">Entrada</Button>
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>
