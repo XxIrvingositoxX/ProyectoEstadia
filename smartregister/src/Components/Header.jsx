@@ -1,20 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../Images/logo.png'
-import Logo1 from '../Images/logo1.png'
+import Logo from '../Images/logo.png';
+import Logo1 from '../Images/logo1.png';
+import Logout from './Logout';
 import {
   Dialog,
   DialogPanel,
   Disclosure,
   PopoverGroup,
-} from '@headlessui/react'
+} from '@headlessui/react';
 import {
   Bars3Icon,
   XMarkIcon,
-} from '@heroicons/react/24/outline'
+} from '@heroicons/react/24/outline';
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <header className="bg-white drop-shadow-xl">
@@ -35,27 +37,24 @@ export default function Header() {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-24">
-        <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/home'>Inicio</Link></li>
-        <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/colleague'>Colaboradores</Link></li>
-        <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/'>Visitantes</Link></li>
-        <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/'>Llaves</Link></li>
+          <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/home'>Inicio</Link></li>
+          <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/colleague'>Colaboradores</Link></li>
+          <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/visitors'>Visitantes</Link></li>
+          <li className='list-none'><Link className="text-base font-semibold leading-6 text-gray-900 hover:underline underline-offset-4" to='/keys'>Llaves</Link></li>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/" className="text-base font-semibold leading-6 text-red-600 hover:text-red-800 hover:underline underline-offset-4">
+          <button type="button" className="text-base font-semibold leading-6 text-red-600 hover:text-red-800 hover:underline underline-offset-4" onClick={() => setModalOpen(true)}>
             Cerrar sesión <span aria-hidden="true">&rarr;</span>
-          </a>
+          </button>
         </div>
       </nav>
+      <Logout openmodal={modalOpen} onClose={setModalOpen}/>
       <Dialog className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="/home" className="-m-1.5 p-1.5">
-              <img
-                className="h-8 w-auto"
-                src={Logo1}
-                alt=""
-              />
+              <img className="h-8 w-auto" src={Logo1} alt="" />
             </a>
             <button
               type="button"
@@ -81,17 +80,18 @@ export default function Header() {
                 <li className='list-none'><Link className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to='/'>Llaves</Link></li>
               </div>
               <div className="py-6">
-                <a
+                <button
                   href="/"
                   className="text-base font-semibold leading-6 text-red-600 hover:text-red-800"
+                  onClick={() => setModalOpen(true)}
                 >
                   Cerrar sesión
-                </a>
+                </button>
               </div>
             </div>
           </div>
         </DialogPanel>
       </Dialog>
     </header>
-  )
+  );
 }

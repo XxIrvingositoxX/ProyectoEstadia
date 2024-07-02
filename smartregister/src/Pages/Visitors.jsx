@@ -3,9 +3,9 @@ import Header from "../Components/Header";
 import Date from "../Components/Date";
 import { Table, Button } from "flowbite-react";
 
-function Collegue() {
+function Visitors() {
     useEffect(() => {
-        document.title = "Colaboradores";
+        document.title = "Visitantes";
     }, []);
     return (
         <>
@@ -55,13 +55,12 @@ function Collegue() {
                     </div>
                 </dl>
             </div>
-            <div className="flex mt-14">
+            <div className="flex mt-14 ">
                 <div className="overflow-x-auto w-5/6 mx-auto">
                     <Table hoverable className="min-w-full text-xs border justify-center text-center">
                         <Table.Head className="text-lg">
-                            <Table.HeadCell className="p-2">No.Colaborador</Table.HeadCell>
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Departamento</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Empresa</Table.HeadCell>
                             <Table.HeadCell className="p-2">Fecha</Table.HeadCell>
                             <Table.HeadCell className="p-2">Entrada</Table.HeadCell>
                             <Table.HeadCell className="p-2">Salida</Table.HeadCell>
@@ -70,9 +69,6 @@ function Collegue() {
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
-                                    12332
-                                </Table.Cell>
                                 <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
                                 <Table.Cell className="p-2">Ama de llaves</Table.Cell>
                                 <Table.Cell className="p-2">29/06/2024</Table.Cell>
@@ -80,7 +76,7 @@ function Collegue() {
                                 <Table.Cell className="p-2">6:22:32</Table.Cell>
                                 <Table.Cell className="p-2">Fuera</Table.Cell>
                                 <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-12">Entrada</Button>
+                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-16">Entrada</Button>
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>
@@ -90,4 +86,4 @@ function Collegue() {
         </>
     );
 }
-export default Collegue;
+export default Visitors;
