@@ -1,19 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import DateV from "../Components/DateV";
+import OutVisitor from "../Components/OutVisitor";
 import { Table, Button } from "flowbite-react";
+import AddVisitor from "../Components/AddVisitor";
 
 function Visitors() {
     useEffect(() => {
         document.title = "Visitantes";
     }, []);
+    const [OutModal, setOutModal] = useState(false);
+    const [AddVisitorModal, setAddVisitor] = useState(false);
     return (
         <>
             <Header />
             <DateV />
-            <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
-                <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
-                    <div className="flex flex-col-reverse ">
+            <OutVisitor openmodalOut={OutModal} onClose={setOutModal}/>
+            <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} />
+            <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none mt-14">
+                <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-3 lg:grid-cols-4">
+                    <div className="flex flex-col-reverse">
                         <form className="max-w-md mx-auto w-full lg:ml-40">
                             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
                                 Buscar
@@ -28,7 +34,7 @@ function Visitors() {
                                     type="search"
                                     id="default-search"
                                     className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="Colaborador..."
+                                    placeholder="Nombre,empresa..."
                                     required
                                 />
                                 <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-sky-800 hover:bg-sky-900 font-medium rounded-lg text-sm px-4 py-2">
@@ -48,10 +54,13 @@ function Visitors() {
                             >
                                 <option value="Dentro">Dentro</option>
                                 <option value="Fuera">Fuera</option>
-                                <option value="">BellBoys</option>
-                                <option value="">Telefonos</option>
                             </select>
                         </form>
+                    </div>
+                    <div className="flex flex-col-reverse w-28">
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={()=> setAddVisitor(true)}>
+                            Agregar
+                        </button>
                     </div>
                 </dl>
             </div>
@@ -68,7 +77,7 @@ function Visitors() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
                                 <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
                                 <Table.Cell className="p-2">Ama de llaves</Table.Cell>
                                 <Table.Cell className="p-2">29/06/2024</Table.Cell>
@@ -76,7 +85,7 @@ function Visitors() {
                                 <Table.Cell className="p-2">6:22:32</Table.Cell>
                                 <Table.Cell className="p-2">Fuera</Table.Cell>
                                 <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-16">Entrada</Button>
+                                    <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-16" onClick={()=> setOutModal(true)}>Salida</Button>
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>

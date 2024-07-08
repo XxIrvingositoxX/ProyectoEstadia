@@ -28,7 +28,7 @@ function Keys() {
                                     type="search"
                                     id="default-search"
                                     className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="Colaborador..."
+                                    placeholder="No.Llave,Nombre..."
                                     required
                                 />
                                 <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-sky-800 hover:bg-sky-900 font-medium rounded-lg text-sm px-4 py-2">
@@ -68,7 +68,7 @@ function Keys() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
                                     24
                                 </Table.Cell>

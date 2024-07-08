@@ -76,8 +76,8 @@ export default function Header() {
                 </Disclosure>
                 <li className='list-none'><Link className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to='/home'>Inicio</Link></li>
                 <li className='list-none'><Link className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to='/colleague'>Colaboradores</Link></li>
-                <li className='list-none'><Link className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to='/'>Visitantes</Link></li>
-                <li className='list-none'><Link className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to='/'>Llaves</Link></li>
+                <li className='list-none'><Link className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to='/visitors'>Visitantes</Link></li>
+                <li className='list-none'><Link className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to='/keys'>Llaves</Link></li>
               </div>
               <div className="py-6">
                 <button

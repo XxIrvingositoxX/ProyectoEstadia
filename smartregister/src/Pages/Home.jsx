@@ -1,14 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import { Table, Button } from "flowbite-react";
-
+import Disable from "../Components/Disable";
+import AddUser from "../Components/AddUser";
 function Home() {
     useEffect(() => {
         document.title = "Inicio";
     }, []);
+    const [DisableModal, setDisableModal] = useState(false);
+    const [AddUserModal, setAddUserModal] = useState(false);
     return (
         <>
             <Header />
+            <Disable openmodal={DisableModal} onClose={setDisableModal} />
+            <AddUser openmodalUser={AddUserModal} onClose={setAddUserModal} />
             <div className="lg:mx-0 mt-14">
                 <h2 className="w-full text-4xl font-medium tracking-wide text-black sm:text-6xl text-center">Dashboard</h2>
             </div>
@@ -47,15 +52,13 @@ function Home() {
                                 id="countries"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             >
-                                <option value="Dentro">Dentro</option>
-                                <option value="Fuera">Fuera</option>
-                                <option value="">BellBoys</option>
-                                <option value="">Telefonos</option>
+                                <option value="Dentro">Activo</option>
+                                <option value="Fuera">Inactivo</option>
                             </select>
                         </form>
                     </div>
                     <div className="flex flex-col-reverse w-28">
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto">
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={()=> setAddUserModal(true)}>
                             Agregar
                         </button>
                     </div>
@@ -65,27 +68,20 @@ function Home() {
                 <div className="overflow-x-auto w-5/6 mx-auto">
                     <Table hoverable className="min-w-full text-xs border justify-center text-center">
                         <Table.Head className="text-lg">
+                            <Table.HeadCell className="p-2">No Colaborador</Table.HeadCell>
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Empresa</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Fecha</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Entrada</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Salida</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Departamento</Table.HeadCell>
                             <Table.HeadCell className="p-2">Estado</Table.HeadCell>
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
                                 <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
                                 <Table.Cell className="p-2">Ama de llaves</Table.Cell>
                                 <Table.Cell className="p-2">29/06/2024</Table.Cell>
-                                <Table.Cell className="p-2">10:24:23</Table.Cell>
-                                <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Fuera</Table.Cell>
-                                <Table.Cell className="p-2 place-content-center">
-                                    <div className="grid grid-cols-2 gap-4 sm:mt-1 sm:grid-cols-2 lg:grid-cols-2">
-                                    <Button className="bg-indigo-900 hover:bg-indigo-950">Editar</Button>
-                                    <Button className="bg-red-700 hover:bg-red-900">Borrar</Button>
-                                    </div>
+                                <Table.Cell className="p-2">Activo</Table.Cell>
+                                <Table.Cell className="p-2">
+                                    <Button className="bg-red-600 hover:bg-red-700 2xl:left-24" onClick={() => setDisableModal(true)}>Deshabilitar</Button>
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>

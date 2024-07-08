@@ -69,7 +69,7 @@ function Collegue() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
                                     12332
                                 </Table.Cell>

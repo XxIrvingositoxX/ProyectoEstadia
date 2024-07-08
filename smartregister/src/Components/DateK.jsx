@@ -25,11 +25,11 @@ export default function DateK() {
                     <dl className="mt-16 grid grid-cols-1 gap-8 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">
                         <div className="flex flex-col-reverse">
                             <dt className="text-xl leading-7 text-black">1213</dt>
-                            <dd className="text-2xl font-bold leading-9 tracking-tight text-black">Dentro de la propiedad</dd>
+                            <dd className="text-2xl font-bold leading-9 tracking-tight text-black">Prestadas</dd>
                         </div>  
                         <div className="flex flex-col-reverse">
                             <dt className="text-xl leading-7 text-black">1213</dt>
-                            <dd className="text-2xl font-bold leading-9 tracking-tight text-black">Fuera de la propiedad</dd>
+                            <dd className="text-2xl font-bold leading-9 tracking-tight text-black">Disponibles</dd>
                         </div>  
                         <div className="flex flex-col-reverse">
                             <dt className="text-xl leading-7 text-black">{todayis}</dt>

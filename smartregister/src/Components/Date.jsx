@@ -19,7 +19,7 @@ export default function DateComponent() {
         <div className="relative isolate overflow-hidden bg-white py-20 sm:py-20 mt-10 text-center justify-center">
             <div className="mx-auto w-3/4 px-6 lg:px-8 text-center justify-center">
                 <div className="lg:mx-0">
-                    <h2 className="w-full text-4xl font-medium tracking-wide text-black sm:text-6xl text-center">Hola</h2>
+                    <h2 className="w-full text-4xl font-medium tracking-wide text-black sm:text-6xl text-center">Colaboradores</h2>
                 </div>
                 <div className="mx-auto mt-24 max-w-2xl lg:mx-0 lg:max-w-none">
                     <dl className="mt-16 grid grid-cols-1 gap-8 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">
