@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Header from "../Components/Header";
-import Date from "../Components/Date";
+import DateV from "../Components/DateV";
 import { Table, Button } from "flowbite-react";
 
 function Visitors() {
@@ -10,7 +10,7 @@ function Visitors() {
     return (
         <>
             <Header />
-            <Date />
+            <DateV />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
@@ -46,8 +46,8 @@ function Visitors() {
                                 id="countries"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             >
-                                <option value="">Ama de llaves</option>
-                                <option value="">Sistemas</option>
+                                <option value="Dentro">Dentro</option>
+                                <option value="Fuera">Fuera</option>
                                 <option value="">BellBoys</option>
                                 <option value="">Telefonos</option>
                             </select>
