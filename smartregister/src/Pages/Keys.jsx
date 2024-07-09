@@ -15,7 +15,7 @@ function Keys() {
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
                         <form className="max-w-md mx-auto w-full lg:ml-40">
-                            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
                                 Buscar
                             </label>
                             <div className="relative">
@@ -27,7 +27,7 @@ function Keys() {
                                 <input
                                     type="search"
                                     id="default-search"
-                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                                     placeholder="No.Llave,Nombre..."
                                     required
                                 />
@@ -39,12 +39,12 @@ function Keys() {
                     </div>
                     <div className="flex flex-col-reverse lg:ml-40">
                         <form className="max-w-md mx-auto w-full">
-                            <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900">
                                 Selecciona una opción
                             </label>
                             <select
                                 id="countries"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-4"
                             >
                                 <option value="Prestadas">Prestadas</option>
                                 <option value="Disponibles">Disponibles</option>
@@ -69,7 +69,7 @@ function Keys() {
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
                                     24
                                 </Table.Cell>
                                 <Table.Cell className="p-2">Sky Gym</Table.Cell>
