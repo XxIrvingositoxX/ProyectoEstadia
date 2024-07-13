@@ -1,12 +1,12 @@
 import React from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
-import { UsersIcon } from '@heroicons/react/24/outline';
+import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 
-export default function OutVisitor({ openmodalOut, onClose }) {
+export default function Enable({ openmodalEnable, onClose }) {
 
     return (
         <>
-            <Dialog className="relative z-10" open={openmodalOut} onClose={() => onClose(false)}>
+            <Dialog className="relative z-10" open={openmodalEnable} onClose={() => onClose(false)}>
                 <DialogBackdrop
                     transition
                     className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -20,16 +20,16 @@ export default function OutVisitor({ openmodalOut, onClose }) {
                         >
                             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-start">
-                                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                        <UsersIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                                        <ShieldCheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
                                     </div>
                                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                         <DialogTitle as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                                            Salida de visitante
+                                            Habilitar usuario
                                         </DialogTitle>
                                         <div className="mt-2">
                                             <p className="text-sm text-gray-500">
-                                                ¿Estás seguro de que salió el visitante? Haz click en Aceptar si el visitante está fuera de la propiedad
+                                                ¿Estás seguro de que quieres habilitar este usuario?
                                             </p>
                                         </div>
                                     </div>
@@ -38,10 +38,10 @@ export default function OutVisitor({ openmodalOut, onClose }) {
                             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                 <button
                                     type="button"
-                                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto"
+                                    className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto"
                                     onClick={() => onClose(false)} 
                                 >
-                                    Aceptar
+                                    Habilitar
                                 </button>
                                 <button
                                     type="button"

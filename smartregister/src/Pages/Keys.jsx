@@ -1,16 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import DateK from "../Components/DateK";
 import { Table, Button } from "flowbite-react";
+import ToLend from "../Components/ToLend";
 
 function Keys() {
     useEffect(() => {
         document.title = "Llaves";
     }, []);
+    const [openLend, setLend] = useState(false);
     return (
         <>
             <Header />
             <DateK/>
+            <ToLend openmodalLend={openLend} onClose={()=> setLend(false)}/>
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
@@ -73,14 +76,14 @@ function Keys() {
                                     24
                                 </Table.Cell>
                                 <Table.Cell className="p-2">Sky Gym</Table.Cell>
-                                <Table.Cell className="p-2">Julio Paredes Arceo</Table.Cell>
+                                <Table.Cell className="p-2">N/A</Table.Cell>
                                 <Table.Cell className="p-2">1</Table.Cell>
-                                <Table.Cell className="p-2">02/07/2024</Table.Cell>
-                                <Table.Cell className="p-2">09:12:33</Table.Cell>
-                                <Table.Cell className="p-2">17:45:33</Table.Cell>
+                                <Table.Cell className="p-2">N/A</Table.Cell>
+                                <Table.Cell className="p-2">N/A</Table.Cell>
+                                <Table.Cell className="p-2">N/A</Table.Cell>
                                 <Table.Cell className="p-2 text-green-500 font-semibold">Disponible</Table.Cell>
                                 <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-12">Prestar</Button>
+                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-16">Prestar</Button>
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import { Table, Button } from "flowbite-react";
+import Enable from "../Components/Enable";
 import Disable from "../Components/Disable";
 import AddUser from "../Components/AddUser";
 function Home() {
@@ -9,16 +10,30 @@ function Home() {
     }, []);
     const [DisableModal, setDisableModal] = useState(false);
     const [AddUserModal, setAddUserModal] = useState(false);
+    const [EnableModal, setEnableModal] = useState(false);
+    const [isIn, setIsIn] = useState(true);
+
+
+    const handleInClick = () => {
+        setIsIn(false);
+        setDisableModal(true);
+    };
+
+    const handleOutClick = () => {
+        setIsIn(true);
+        setEnableModal(true);
+    };
     return (
         <>
             <Header />
             <Disable openmodal={DisableModal} onClose={setDisableModal} />
+            <Enable openmodalEnable={EnableModal} onClose={setEnableModal} />
             <AddUser openmodalUser={AddUserModal} onClose={setAddUserModal} />
             <div className="lg:mx-0 mt-14">
                 <h2 className="w-full text-4xl font-medium tracking-wide text-black sm:text-6xl text-center">Dashboard</h2>
             </div>
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none mt-14">
-                <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-3 lg:grid-cols-4">
+                <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse">
                         <form className="max-w-md mx-auto w-full lg:ml-40">
                             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
@@ -58,7 +73,7 @@ function Home() {
                         </form>
                     </div>
                     <div className="flex flex-col-reverse w-28">
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={()=> setAddUserModal(true)}>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={() => setAddUserModal(true)}>
                             Agregar
                         </button>
                     </div>
@@ -71,17 +86,28 @@ function Home() {
                             <Table.HeadCell className="p-2">No Colaborador</Table.HeadCell>
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
                             <Table.HeadCell className="p-2">Departamento</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Rol</Table.HeadCell>
                             <Table.HeadCell className="p-2">Estado</Table.HeadCell>
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
                             <Table.Row className="bg-white text-slate-900">
-                                <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Ama de llaves</Table.Cell>
-                                <Table.Cell className="p-2">29/06/2024</Table.Cell>
+                                <Table.Cell className="p-2">1312</Table.Cell>
+                                <Table.Cell className="p-2">Juan Perez</Table.Cell>
+                                <Table.Cell className="p-2">Sistemas</Table.Cell>
+                                <Table.Cell className="p-2">Administrador</Table.Cell>
                                 <Table.Cell className="p-2">Activo</Table.Cell>
-                                <Table.Cell className="p-2">
-                                    <Button className="bg-red-600 hover:bg-red-700 2xl:left-24" onClick={() => setDisableModal(true)}>Deshabilitar</Button>
+                                <Table.Cell className="p-2 place-content-center">
+                                    {isIn ? (
+                                        <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-24" onClick={handleInClick}>
+                                            Deshabilitar
+                                        </Button>
+                                    ) : (
+
+                                        <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-20" onClick={handleOutClick}>
+                                            Habilitar
+                                        </Button>
+                                    )}
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>

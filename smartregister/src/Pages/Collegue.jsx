@@ -64,10 +64,28 @@ function Collegue() {
                                 id="countries"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-4"
                             >
-                                <option value="">Ama de llaves</option>
-                                <option value="">Sistemas</option>
-                                <option value="">BellBoys</option>
-                                <option value="">Telefonos</option>
+                                <option defaultValue="Ama de llaves">Ama de Llaves</option>
+                                <option value="publicas">Áreas Públicas</option>
+                                <option value="ayb">Alimentos & Bebidas</option>
+                                <option value="bares">Bares</option>
+                                <option value="bellBoys">Bell Boys</option>
+                                <option value="bodas">Bodas</option>
+                                <option value="cocina">Cocina</option>
+                                <option value="contraloria">Contraloría</option>
+                                <option value="entretenimiento">Entretenimiento</option>
+                                <option value="gerencia">Gerencia General</option>
+                                <option value="mantenimiento">Mantenimiento</option>
+                                <option value="mod">MOD</option>
+                                <option value="prevencion">Prevención</option>
+                                <option value="recepcion">Recepción</option>
+                                <option value="sociales">Redes Sociales</option>
+                                <option value="room">Room Service</option>
+                                <option value="rh">Recursos Humanos</option>
+                                <option value="sistemas">Sistemas</option>
+                                <option value="spa">Spa</option>
+                                <option value="steward">Steward</option>
+                                <option value="ventas">Ventas</option>
+                                <option value="welcome">Welcome Ambassador</option>
                             </select>
                         </form>
                     </div>

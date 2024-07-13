@@ -18,7 +18,7 @@ function Visitors() {
             <OutVisitor openmodalOut={OutModal} onClose={setOutModal}/>
             <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
-                <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-3 lg:grid-cols-4">
+                <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="flex flex-col-reverse">
                         <form className="max-w-md mx-auto w-full lg:ml-40">
                             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
@@ -43,20 +43,6 @@ function Visitors() {
                             </div>
                         </form>
                     </div>
-                    <div className="flex flex-col-reverse lg:ml-40">
-                        <form className="max-w-md mx-auto w-full">
-                            <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900">
-                                Selecciona una opción
-                            </label>
-                            <select
-                                id="countries"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-4"
-                            >
-                                <option value="Dentro">Dentro</option>
-                                <option value="Fuera">Fuera</option>
-                            </select>
-                        </form>
-                    </div>
                     <div className="flex flex-col-reverse w-28">
                         <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={()=> setAddVisitor(true)}>
                             Agregar
@@ -70,6 +56,8 @@ function Visitors() {
                         <Table.Head className="text-lg">
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
                             <Table.HeadCell className="p-2">Empresa</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Tipo de identificación</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Comentarios</Table.HeadCell>
                             <Table.HeadCell className="p-2">Fecha</Table.HeadCell>
                             <Table.HeadCell className="p-2">Entrada</Table.HeadCell>
                             <Table.HeadCell className="p-2">Salida</Table.HeadCell>
@@ -79,13 +67,15 @@ function Visitors() {
                         <Table.Body className="divide-y text-base">
                             <Table.Row className="bg-white text-slate-900">
                                 <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Ama de llaves</Table.Cell>
+                                <Table.Cell className="p-2">Betta Inc.</Table.Cell>
+                                <Table.Cell className="p-2">INE</Table.Cell>
+                                <Table.Cell className="p-2">N/A</Table.Cell>
                                 <Table.Cell className="p-2">29/06/2024</Table.Cell>
                                 <Table.Cell className="p-2">10:24:23</Table.Cell>
                                 <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Fuera</Table.Cell>
+                                <Table.Cell className="p-2">Dentro</Table.Cell>
                                 <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-16" onClick={()=> setOutModal(true)}>Salida</Button>
+                                    <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={()=> setOutModal(true)}>Salida</Button>
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>

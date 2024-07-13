@@ -41,7 +41,7 @@ export default function InModal({ openmodalIn, onClose }) {
                                     className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto"
                                     onClick={() => onClose(false)} 
                                 >
-                                    Entrada
+                                    Aceptar
                                 </button>
                                 <button
                                     type="button"
