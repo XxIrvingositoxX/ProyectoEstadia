@@ -3,17 +3,29 @@ import Header from "../Components/Header";
 import DateK from "../Components/DateK";
 import { Table, Button } from "flowbite-react";
 import ToLend from "../Components/ToLend";
+import axios from "axios";
 
 function Keys() {
+    const URI = 'http://localhost:8000/keys/'
     useEffect(() => {
         document.title = "Llaves";
     }, []);
     const [openLend, setLend] = useState(false);
+    const [keys, setKeys] = useState([]);
+
+    useEffect(() => {
+        getKeys();
+    })
+
+    const getKeys = async () => {
+        const res = await axios.get(URI)
+        setKeys(res.data);
+    }
     return (
         <>
             <Header />
-            <DateK/>
-            <ToLend openmodalLend={openLend} onClose={()=> setLend(false)}/>
+            <DateK />
+            <ToLend openmodalLend={openLend} onClose={() => setLend(false)} />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
@@ -71,21 +83,23 @@ function Keys() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
-                                    24
-                                </Table.Cell>
-                                <Table.Cell className="p-2">Sky Gym</Table.Cell>
-                                <Table.Cell className="p-2">N/A</Table.Cell>
-                                <Table.Cell className="p-2">1</Table.Cell>
-                                <Table.Cell className="p-2">N/A</Table.Cell>
-                                <Table.Cell className="p-2">N/A</Table.Cell>
-                                <Table.Cell className="p-2">N/A</Table.Cell>
-                                <Table.Cell className="p-2 text-green-500 font-semibold">Disponible</Table.Cell>
-                                <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-16">Prestar</Button>
-                                </Table.Cell>
-                            </Table.Row>
+                            {keys.map((key) => (
+                                <Table.Row key={key.id} className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
+                                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
+                                        {key.nokey}
+                                    </Table.Cell>
+                                    <Table.Cell className="p-2">{key.namek}</Table.Cell>
+                                    <Table.Cell className="p-2">{key.responsible}</Table.Cell>
+                                    <Table.Cell className="p-2">{key.cuantity}</Table.Cell>
+                                    <Table.Cell className="p-2">{key.datetodayk === "" ? 'N/A' : key.datetodayk}</Table.Cell>
+                                    <Table.Cell className="p-2">{key.exitk === "" ? 'N/A' : key.exitk}</Table.Cell>
+                                    <Table.Cell className="p-2">{key.back === "" ? 'N/A' : key.back}</Table.Cell>
+                                    <Table.Cell className="p-2 text-green-500 font-semibold">{key.statek === true ? 'Prestar' : 'Devolver'}</Table.Cell>
+                                    <Table.Cell className="p-2 place-content-center">
+                                        <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-16">Prestar</Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
                         </Table.Body>
                     </Table>
                 </div>

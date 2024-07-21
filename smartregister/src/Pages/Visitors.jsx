@@ -15,11 +15,11 @@ function Visitors() {
     const [AddVisitorModal, setAddVisitor] = useState(false);
     const [visitors, setVisitors] = useState([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         getVisitors();
     })
 
-    const getVisitors = async ()=> {
+    const getVisitors = async () => {
         const res = await axios.get(URI)
         setVisitors(res.data)
     }
@@ -27,7 +27,7 @@ function Visitors() {
         <>
             <Header />
             <DateV />
-            <OutVisitor openmodalOut={OutModal} onClose={setOutModal}/>
+            <OutVisitor openmodalOut={OutModal} onClose={setOutModal} />
             <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -56,7 +56,7 @@ function Visitors() {
                         </form>
                     </div>
                     <div className="flex flex-col-reverse w-28">
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={()=> setAddVisitor(true)}>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={() => setAddVisitor(true)}>
                             Agregar
                         </button>
                     </div>
@@ -77,19 +77,21 @@ function Visitors() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white text-slate-900">
-                                <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Betta Inc.</Table.Cell>
-                                <Table.Cell className="p-2">INE</Table.Cell>
-                                <Table.Cell className="p-2">N/A</Table.Cell>
-                                <Table.Cell className="p-2">29/06/2024</Table.Cell>
-                                <Table.Cell className="p-2">10:24:23</Table.Cell>
-                                <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Dentro</Table.Cell>
-                                <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={()=> setOutModal(true)}>Salida</Button>
-                                </Table.Cell>
-                            </Table.Row>
+                            {visitors.map((visitor) => (
+                                <Table.Row key={visitor.id} className="bg-white text-slate-900">
+                                    <Table.Cell className="p-2">{visitor.namev}</Table.Cell>
+                                    <Table.Cell className="p-2">{visitor.company}</Table.Cell>
+                                    <Table.Cell className="p-2">{visitor.identification}</Table.Cell>
+                                    <Table.Cell className="p-2">{visitor.comments === "" ? 'N/A' : visitor.comments}</Table.Cell>
+                                    <Table.Cell className="p-2">{visitor.datetodayv === "" ? 'N/A' : visitor.datetodayv}</Table.Cell>
+                                    <Table.Cell className="p-2">{visitor.entrancev === "" ? 'N/A' : visitor.entrancev}</Table.Cell>
+                                    <Table.Cell className="p-2">{visitor.exitv === "" ? 'N/A' : visitor.exitv}</Table.Cell>
+                                    <Table.Cell className="p-2">{visitor.statev === false ? 'Fuera' : 'Dentro'}</Table.Cell>
+                                    <Table.Cell className="p-2 place-content-center">
+                                        <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => setOutModal(true)}>Salida</Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
                         </Table.Body>
                     </Table>
                 </div>
