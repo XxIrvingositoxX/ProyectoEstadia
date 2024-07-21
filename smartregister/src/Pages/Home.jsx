@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import axios from 'axios'
 import Header from "../Components/Header";
 import { Table, Button } from "flowbite-react";
 import Enable from "../Components/Enable";
 import Disable from "../Components/Disable";
 import AddUser from "../Components/AddUser";
 function Home() {
+    const URI = 'http://localhost:8000/users/'
     useEffect(() => {
         document.title = "Inicio";
     }, []);
@@ -12,6 +14,15 @@ function Home() {
     const [AddUserModal, setAddUserModal] = useState(false);
     const [EnableModal, setEnableModal] = useState(false);
     const [isIn, setIsIn] = useState(true);
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+        getUsers()
+    }, [])
+
+    const getUsers = async () => {
+        const res = await axios.get(URI)
+        setUsers(res.data)
+    }
 
 
     const handleInClick = () => {
@@ -91,27 +102,31 @@ function Home() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white text-slate-900">
-                                <Table.Cell className="p-2">1312</Table.Cell>
-                                <Table.Cell className="p-2">Juan Perez</Table.Cell>
-                                <Table.Cell className="p-2">Sistemas</Table.Cell>
-                                <Table.Cell className="p-2">Administrador</Table.Cell>
-                                <Table.Cell className="p-2">Activo</Table.Cell>
-                                <Table.Cell className="p-2 place-content-center">
-                                    {isIn ? (
-                                        <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-24" onClick={handleInClick}>
-                                            Deshabilitar
-                                        </Button>
-                                    ) : (
-
-                                        <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-20" onClick={handleOutClick}>
-                                            Habilitar
-                                        </Button>
-                                    )}
-                                </Table.Cell>
-                            </Table.Row>
+                            {users.map((user) => (
+                                <Table.Row key={user.id} className="bg-white text-slate-900">
+                                    <Table.Cell className="p-2">{user.nocolleague}</Table.Cell>
+                                    <Table.Cell className="p-2">{user.name}</Table.Cell>
+                                    <Table.Cell className="p-2">{user.department}</Table.Cell>
+                                    <Table.Cell className="p-2">{user.rol}</Table.Cell>
+                                    <Table.Cell className="p-2">
+                                        {user.state === false ? 'Inactivo' : 'Activo'}
+                                    </Table.Cell>
+                                    <Table.Cell className="p-2 place-content-center">
+                                        {user.state === false ? (
+                                            <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-24" onClick={handleOutClick}>
+                                                Habilitar
+                                            </Button>
+                                        ) : (
+                                            <Button className="bg-red-600 hover:bg-red-700 pr-1 pl-1 lg:left-24 text-center" onClick={handleInClick}>
+                                                Deshabilitar
+                                            </Button>
+                                        )}
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
                         </Table.Body>
                     </Table>
+
                 </div>
             </div>
         </>

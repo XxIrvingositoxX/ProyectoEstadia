@@ -4,13 +4,25 @@ import DateV from "../Components/DateV";
 import OutVisitor from "../Components/OutVisitor";
 import { Table, Button } from "flowbite-react";
 import AddVisitor from "../Components/AddVisitor";
+import axios from "axios";
 
 function Visitors() {
+    const URI = 'http://localhost:8000/visitors/'
     useEffect(() => {
         document.title = "Visitantes";
     }, []);
     const [OutModal, setOutModal] = useState(false);
     const [AddVisitorModal, setAddVisitor] = useState(false);
+    const [visitors, setVisitors] = useState([]);
+
+    useEffect(()=>{
+        getVisitors();
+    })
+
+    const getVisitors = async ()=> {
+        const res = await axios.get(URI)
+        setVisitors(res.data)
+    }
     return (
         <>
             <Header />

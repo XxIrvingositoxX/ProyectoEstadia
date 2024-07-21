@@ -1,4 +1,4 @@
-import UserModel from "../models/UserModel";
+import UserModel from "../models/UserModel.js";
 
 //Trae todos los usuarios
 export const getAllUsers = async (req, res) => {
@@ -17,7 +17,7 @@ export const getUser = async (req, res) => {
                 id: req.params.id
             }
         })
-        res(user)
+        res.json(user[0])
     } catch (error) {
         res.json({ message: error.message })
     }
@@ -41,7 +41,7 @@ export const updateUser = async (req, res) => {
                 id: req.params.id
             }
         })
-        req.json({
+        res.json({
             "message": "Registro actualizado correctamente"
         })
     } catch (error) {

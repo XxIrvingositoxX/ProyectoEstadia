@@ -4,14 +4,26 @@ import Date from "../Components/Date";
 import { Table, Button } from "flowbite-react";
 import InModal from "../Components/InModal";
 import OutModal from "../Components/OutModal";
+import axios from "axios";
 
 function Collegue() {
+    const URI = 'http://localhost:8000/colleagues/'
     useEffect(() => {
         document.title = "Colaboradores";
     }, []);
     const [ModalIn, setModalIn] = useState(false);
     const [ModalOut, setModalOut] = useState(false);
+    const [colleagues, setColleagues] = useState([]);
     const [isIn, setIsIn] = useState(true);
+
+    useEffect(() => {
+        getColleagues();
+    }, [])
+
+    const getColleagues = async () => {
+        const res = await axios.get(URI)
+        setColleagues(res.data)
+    }
 
     const handleInClick = () => {
         setIsIn(false);
@@ -105,28 +117,30 @@ function Collegue() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white text-slate-900">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
-                                    12332
-                                </Table.Cell>
-                                <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Ama de llaves</Table.Cell>
-                                <Table.Cell className="p-2">29/06/2024</Table.Cell>
-                                <Table.Cell className="p-2">10:24:23</Table.Cell>
-                                <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Fuera</Table.Cell>
-                                <Table.Cell className="p-2 place-content-center">
-                                    {isIn ? (
-                                        <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-12" onClick={handleInClick}>
-                                            Entrada
-                                        </Button>
-                                    ) : (
-                                        <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-12" onClick={handleOutClick}>
-                                            Salida
-                                        </Button>
-                                    )}
-                                </Table.Cell>
-                            </Table.Row>
+                            {colleagues.map((colleague) => (
+                                <Table.Row key={colleague.id} className="bg-white text-slate-900">
+                                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
+                                        {colleague.nocolleaguec}
+                                    </Table.Cell>
+                                    <Table.Cell className="p-2">{colleague.namec}</Table.Cell>
+                                    <Table.Cell className="p-2">{colleague.departmentc}</Table.Cell>
+                                    <Table.Cell className="p-2">{colleague.datetodayc === "" ? 'N/A' : colleague.datetodayc}</Table.Cell>
+                                    <Table.Cell className="p-2">{colleague.entrancec === "" ? 'N/A' : colleague.entrancec}</Table.Cell>
+                                    <Table.Cell className="p-2">{colleague.exitc === "" ? 'N/A' : colleague.exitc}</Table.Cell>
+                                    <Table.Cell className="p-2">{colleague.state === false ? 'Fuera' : 'Dentro'}</Table.Cell>
+                                    <Table.Cell className="p-2 place-content-center">
+                                        {colleague.state === false ? (
+                                            <Button className="bg-green-500 hover:bg-green-700 pr-2 pl-3 lg:left-12 text-center" onClick={handleInClick}>
+                                                Entrada
+                                            </Button>
+                                        ) : (
+                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-12" onClick={handleOutClick}>
+                                                Salida
+                                            </Button>
+                                        )}
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
                         </Table.Body>
                     </Table>
                 </div>
