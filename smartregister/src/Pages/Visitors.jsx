@@ -10,23 +10,26 @@ function Visitors() {
     const URI = 'http://localhost:8000/visitors/'
     useEffect(() => {
         document.title = "Visitantes";
+        getVisitors();
+        getCounts();
     }, []);
     const [OutModal, setOutModal] = useState(false);
     const [AddVisitorModal, setAddVisitor] = useState(false);
     const [visitors, setVisitors] = useState([]);
-
-    useEffect(() => {
-        getVisitors();
-    })
+    const [activeCount, setActiveCount] = useState(0);
 
     const getVisitors = async () => {
         const res = await axios.get(URI)
         setVisitors(res.data)
     }
+    const getCounts = async () => {
+        const res = await axios.get(`${URI}count/state`);
+        setActiveCount(res.data.activeCount);
+    }
     return (
         <>
             <Header />
-            <DateV />
+            <DateV activeCount={activeCount} />
             <OutVisitor openmodalOut={OutModal} onClose={setOutModal} />
             <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">

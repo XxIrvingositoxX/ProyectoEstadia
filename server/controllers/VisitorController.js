@@ -44,3 +44,11 @@ export const updateVisitor = async (req, res) => {
         res.json({ message: error.message })
     }
 }
+export const countVisitorsByState = async (req, res) => {
+    try {
+        const activeCount = await VisitorModel.count({ where: { statev: true } });
+        res.json({ activeCount })
+    } catch (error) {
+        res.json({message: error.message});
+    }
+}

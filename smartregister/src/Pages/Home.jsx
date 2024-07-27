@@ -1,44 +1,50 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios'
+import axios from 'axios';
 import Header from "../Components/Header";
 import { Table, Button } from "flowbite-react";
 import Enable from "../Components/Enable";
 import Disable from "../Components/Disable";
 import AddUser from "../Components/AddUser";
+
 function Home() {
-    const URI = 'http://localhost:8000/users/'
-    useEffect(() => {
-        document.title = "Inicio";
-    }, []);
+    const URI = 'http://localhost:8000/users/';
     const [DisableModal, setDisableModal] = useState(false);
     const [AddUserModal, setAddUserModal] = useState(false);
     const [EnableModal, setEnableModal] = useState(false);
     const [isIn, setIsIn] = useState(true);
     const [users, setUsers] = useState([]);
+    const [selectedUserId, setSelectedUserId] = useState(null);
+
     useEffect(() => {
-        getUsers()
-    }, [])
+        document.title = "Inicio";
+        getUsers();
+    }, []);
 
     const getUsers = async () => {
-        const res = await axios.get(URI)
-        setUsers(res.data)
-    }
+        const res = await axios.get(URI);
+        setUsers(res.data);
+    };
 
-
-    const handleInClick = () => {
+    const handleInClick = (userId) => {
         setIsIn(false);
         setDisableModal(true);
+        setSelectedUserId(userId);
     };
 
-    const handleOutClick = () => {
+    const handleOutClick = (userId) => {
         setIsIn(true);
         setEnableModal(true);
+        setSelectedUserId(userId);
     };
+
+    const updatedList = () => {
+        getUsers();
+    }
     return (
         <>
             <Header />
-            <Disable openmodal={DisableModal} onClose={setDisableModal} />
-            <Enable openmodalEnable={EnableModal} onClose={setEnableModal} />
+            <Disable openmodal={DisableModal} onClose={setDisableModal} userId={selectedUserId} updatedList={updatedList} />
+            <Enable openmodalEnable={EnableModal} onClose={setEnableModal} userId={selectedUserId} updatedList={updatedList} />
             <AddUser openmodalUser={AddUserModal} onClose={setAddUserModal} />
             <div className="lg:mx-0 mt-14">
                 <h2 className="w-full text-4xl font-medium tracking-wide text-black sm:text-6xl text-center">Dashboard</h2>
@@ -109,15 +115,15 @@ function Home() {
                                     <Table.Cell className="p-2">{user.department}</Table.Cell>
                                     <Table.Cell className="p-2">{user.rol}</Table.Cell>
                                     <Table.Cell className="p-2">
-                                        {user.state === false ? 'Inactivo' : 'Activo'}
+                                        {user.state === false || null ? 'Inactivo' : 'Activo'}
                                     </Table.Cell>
                                     <Table.Cell className="p-2 place-content-center">
                                         {user.state === false ? (
-                                            <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-24" onClick={handleOutClick}>
+                                            <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-24" onClick={() => handleOutClick(user.id)}>
                                                 Habilitar
                                             </Button>
                                         ) : (
-                                            <Button className="bg-red-600 hover:bg-red-700 pr-1 pl-1 lg:left-24 text-center" onClick={handleInClick}>
+                                            <Button className="bg-red-600 hover:bg-red-700 pr-1 pl-1 lg:left-24 text-center" onClick={() => handleInClick(user.id)}>
                                                 Deshabilitar
                                             </Button>
                                         )}
@@ -130,6 +136,7 @@ function Home() {
                 </div>
             </div>
         </>
-    )
+    );
 }
+
 export default Home;

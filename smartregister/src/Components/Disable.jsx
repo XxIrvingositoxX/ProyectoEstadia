@@ -1,9 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-export default function Disable({ openmodal, onClose }) {
+export default function Disable({ openmodal, onClose, userId, updatedList }) {
+    const URI = 'http://localhost:8000/users/';
+    const [state, setState] = useState(false);
 
+    useEffect(() => {
+        if (userId) {
+            getUserbyId();
+        }
+    }, [userId]);
+
+    const getUserbyId = async () => {
+        try {
+            const res = await axios.get(`${URI}${userId}`);
+            setState(res.data.state);
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    };
+
+    const update = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.put(`${URI}${userId}`, { state: false });
+            onClose(false);
+            updatedList();
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
+    };
     return (
         <>
             <Dialog className="relative z-10" open={openmodal} onClose={() => onClose(false)}>
@@ -35,23 +63,24 @@ export default function Disable({ openmodal, onClose }) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                <button
-                                    type="button"
-                                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto"
-                                    onClick={() => onClose(false)} 
-                                >
-                                    Deshabilitar
-                                </button>
-                                <button
-                                    type="button"
-                                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                    onClick={() => onClose(false)}
-                                    data-autofocus
-                                >
-                                    Cancelar
-                                </button>
-                            </div>
+                            <form onSubmit={update}>
+                                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                    <button
+                                        type="submit"
+                                        className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto"
+                                    >
+                                        Deshabilitar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                        onClick={() => onClose(false)}
+                                        data-autofocus
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
                         </DialogPanel>
                     </div>
                 </div>

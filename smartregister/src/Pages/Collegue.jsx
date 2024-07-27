@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import Header from "../Components/Header";
 import Date from "../Components/Date";
 import { Table, Button } from "flowbite-react";
@@ -10,37 +10,50 @@ function Collegue() {
     const URI = 'http://localhost:8000/colleagues/'
     useEffect(() => {
         document.title = "Colaboradores";
+        getColleagues();
+        getCounts();
     }, []);
     const [ModalIn, setModalIn] = useState(false);
     const [ModalOut, setModalOut] = useState(false);
     const [colleagues, setColleagues] = useState([]);
     const [isIn, setIsIn] = useState(true);
-
-    useEffect(() => {
-        getColleagues();
-    }, [])
+    const [selectedColleagueId, setSelectedColleagueId] = useState(null);
+    const [activeCount, setActiveCount] = useState(0);
+    const [inactiveCount, setInactiveCount] = useState(0);
 
     const getColleagues = async () => {
         const res = await axios.get(URI)
         setColleagues(res.data)
-    }
+    };
 
-    const handleInClick = () => {
+    const getCounts = async () => {
+        const res = await axios.get(`${URI}count/state`);
+        setActiveCount(res.data.activeCount);
+        setInactiveCount(res.data.inactiveCount);
+    };
+
+    const handleInClick = (colleagueId) => {
         setIsIn(false);
         setModalIn(true);
+        setSelectedColleagueId(colleagueId)
     };
 
-    const handleOutClick = () => {
+    const handleOutClick = (colleagueId) => {
         setIsIn(true);
         setModalOut(true);
+        setSelectedColleagueId(colleagueId)
     };
 
+    const updatedList = () => {
+        getColleagues();
+        getCounts();
+    }
     return (
         <>
             <Header />
-            <Date />
-            <InModal openmodalIn={ModalIn} onClose={() => setModalIn(false)} />
-            <OutModal openmodalOut={ModalOut} onClose={() => setModalOut(false)} />
+            <Date activeCount={activeCount} inactiveCount={inactiveCount} />
+            <InModal openmodalIn={ModalIn} onClose={() => setModalIn(false)} colleagueId={selectedColleagueId} updatedList={updatedList} />
+            <OutModal openmodalOut={ModalOut} onClose={() => setModalOut(false)} colleagueId={selectedColleagueId} updatedList={updatedList} />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
@@ -130,11 +143,11 @@ function Collegue() {
                                     <Table.Cell className="p-2">{colleague.state === false ? 'Fuera' : 'Dentro'}</Table.Cell>
                                     <Table.Cell className="p-2 place-content-center">
                                         {colleague.state === false ? (
-                                            <Button className="bg-green-500 hover:bg-green-700 pr-2 pl-3 lg:left-12 text-center" onClick={handleInClick}>
+                                            <Button className="bg-green-500 hover:bg-green-700 pr-2 pl-3 lg:left-12 text-center" onClick={() => handleInClick(colleague.id)}>
                                                 Entrada
                                             </Button>
                                         ) : (
-                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-12" onClick={handleOutClick}>
+                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-12" onClick={() => handleOutClick(colleague.id)}>
                                                 Salida
                                             </Button>
                                         )}

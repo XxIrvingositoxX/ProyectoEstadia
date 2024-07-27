@@ -38,3 +38,13 @@ export const updateColleague = async (req, res) => {
         res.json({ message: error.message })
     }
 }
+//Contador de colaboradores
+export const countColleaguesByState = async (req, res) => {
+    try {
+        const activeCount = await ColleagueModel.count({ where: { state: true } });
+        const inactiveCount = await ColleagueModel.count({ where: { state: false } });
+        res.json({ activeCount, inactiveCount });
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+};
