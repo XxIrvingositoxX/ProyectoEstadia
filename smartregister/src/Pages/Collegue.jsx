@@ -123,7 +123,8 @@ function Collegue() {
                             <Table.HeadCell className="p-2">No.Colaborador</Table.HeadCell>
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
                             <Table.HeadCell className="p-2">Departamento</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Fecha</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Fecha de entrada</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Fecha de salida</Table.HeadCell>
                             <Table.HeadCell className="p-2">Entrada</Table.HeadCell>
                             <Table.HeadCell className="p-2">Salida</Table.HeadCell>
                             <Table.HeadCell className="p-2">Estado</Table.HeadCell>
@@ -138,16 +139,17 @@ function Collegue() {
                                     <Table.Cell className="p-2">{colleague.namec}</Table.Cell>
                                     <Table.Cell className="p-2">{colleague.departmentc}</Table.Cell>
                                     <Table.Cell className="p-2">{colleague.datetodayc === "" ? 'N/A' : colleague.datetodayc}</Table.Cell>
+                                    <Table.Cell className="p-2">{colleague.datetodayexitc === "" ? 'N/A' : colleague.datetodayexitc}</Table.Cell>
                                     <Table.Cell className="p-2">{colleague.entrancec === "" ? 'N/A' : colleague.entrancec}</Table.Cell>
                                     <Table.Cell className="p-2">{colleague.exitc === "" ? 'N/A' : colleague.exitc}</Table.Cell>
                                     <Table.Cell className="p-2">{colleague.state === false ? 'Fuera' : 'Dentro'}</Table.Cell>
                                     <Table.Cell className="p-2 place-content-center">
                                         {colleague.state === false ? (
-                                            <Button className="bg-green-500 hover:bg-green-700 pr-2 pl-3 lg:left-12 text-center" onClick={() => handleInClick(colleague.id)}>
+                                            <Button className="bg-green-500 hover:bg-green-700 pr-2 pl-3 lg:left-8 text-center" onClick={() => handleInClick(colleague.id)}>
                                                 Entrada
                                             </Button>
                                         ) : (
-                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-12" onClick={() => handleOutClick(colleague.id)}>
+                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => handleOutClick(colleague.id)}>
                                                 Salida
                                             </Button>
                                         )}

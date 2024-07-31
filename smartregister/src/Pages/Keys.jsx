@@ -4,28 +4,54 @@ import DateK from "../Components/DateK";
 import { Table, Button } from "flowbite-react";
 import ToLend from "../Components/ToLend";
 import axios from "axios";
+import ToReturn from "../Components/ToReturn";
 
 function Keys() {
     const URI = 'http://localhost:8000/keys/'
     useEffect(() => {
         document.title = "Llaves";
+        getKeys();
+        getCount();
     }, []);
     const [openLend, setLend] = useState(false);
+    const [openReturn, setReturn] = useState(false)
     const [keys, setKeys] = useState([]);
+    const [activeCount, setActiveCount] = useState(0);
+    const [inactiveCount, setInactiveCount] = useState(0);
+    const [selectedKeyId, setSelectedKeyId] = useState(null);
 
-    useEffect(() => {
-        getKeys();
-    })
 
     const getKeys = async () => {
         const res = await axios.get(URI)
         setKeys(res.data);
     }
+
+    const handleLendClick = (keyId) => {
+        setSelectedKeyId(keyId);
+        setLend(true);
+    }
+
+    const handleReturnClick = (keyId) => {
+        setSelectedKeyId(keyId);
+        setReturn(true)
+    }
+
+    const getCount = async () => {
+        const res = await axios.get(`${URI}count/state`);
+        setActiveCount(res.data.activeCount);
+        setInactiveCount(res.data.inactiveCount);
+    }
+
+    const updatedList = () => {
+        getKeys();
+        getCount();
+    }
     return (
         <>
             <Header />
-            <DateK />
-            <ToLend openmodalLend={openLend} onClose={() => setLend(false)} />
+            <DateK activeCount={activeCount} inactiveCount={inactiveCount} />
+            <ToReturn openmodalReturn={openReturn} onClose={() => setReturn(false)} keyId={selectedKeyId} updatedList={updatedList}/>
+            <ToLend openmodalLend={openLend} onClose={() => setLend(false)} keyId={selectedKeyId} updatedList={updatedList}/>
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
@@ -76,7 +102,8 @@ function Keys() {
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
                             <Table.HeadCell className="p-2">Responsable</Table.HeadCell>
                             <Table.HeadCell className="p-2">Cantidad</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Fecha</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Fecha de salida</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Fecha de regreso</Table.HeadCell>
                             <Table.HeadCell className="p-2">Salida</Table.HeadCell>
                             <Table.HeadCell className="p-2">Regreso</Table.HeadCell>
                             <Table.HeadCell className="p-2">Estado</Table.HeadCell>
@@ -89,14 +116,21 @@ function Keys() {
                                         {key.nokey}
                                     </Table.Cell>
                                     <Table.Cell className="p-2">{key.namek}</Table.Cell>
-                                    <Table.Cell className="p-2">{key.responsible}</Table.Cell>
+                                    <Table.Cell className="p-2">{key.responsible === "" ? 'N/A' : key.responsible}</Table.Cell>
                                     <Table.Cell className="p-2">{key.cuantity}</Table.Cell>
+                                    <Table.Cell className="p-2">{key.datetodayexitk === "" ? 'N/A' : key.datetodayexitk}</Table.Cell>
                                     <Table.Cell className="p-2">{key.datetodayk === "" ? 'N/A' : key.datetodayk}</Table.Cell>
                                     <Table.Cell className="p-2">{key.exitk === "" ? 'N/A' : key.exitk}</Table.Cell>
                                     <Table.Cell className="p-2">{key.back === "" ? 'N/A' : key.back}</Table.Cell>
-                                    <Table.Cell className="p-2 text-green-500 font-semibold">{key.statek === true ? 'Prestar' : 'Devolver'}</Table.Cell>
+                                    <Table.Cell className="p-2 text-green-500 font-semibold">{key.statek === true ? 'Disponible' : 'Prestada'}</Table.Cell>
                                     <Table.Cell className="p-2 place-content-center">
-                                        <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-16">Prestar</Button>
+                                        {key.statek === true ? (
+                                            <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-8" onClick={() => handleLendClick(key.id)}>Prestar</Button>
+
+                                        ) : (
+                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => handleReturnClick(key.id)}>Devolver</Button>
+
+                                        )}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

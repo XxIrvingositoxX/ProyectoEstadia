@@ -35,3 +35,13 @@ export const updateKey = async (req, res) => {
 
     }
 }
+//Contador de llaves
+export const countKeysByState = async (req, res) => {
+    try {
+        const activeCount = await KeyModel.count({ where: { statek: true } });
+        const inactiveCount = await KeyModel.count({ where: { statek: false } });
+        res.json({ activeCount, inactiveCount });
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+};

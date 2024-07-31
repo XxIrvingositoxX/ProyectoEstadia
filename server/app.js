@@ -24,10 +24,6 @@ try {
     console.log('Conexión rechazada')
 }
 
-app.get('/', (req, res)=> {
-    res.send('Hola mundo')
-}) 
-
 app.listen(8000, ()=>{
     console.log("Server Run");
 })

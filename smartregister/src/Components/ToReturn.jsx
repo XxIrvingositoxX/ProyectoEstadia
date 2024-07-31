@@ -1,8 +1,40 @@
-import React from "react";
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle, TabPanel } from '@headlessui/react';
 import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 
-export default function ToReturn({ openmodalReturn, onClose }) {
+export default function ToReturn({ openmodalReturn, onClose, keyId, updatedList }) {
+    const URI = 'http://localhost:8000/keys/';
+    const [state, setState] = useState(false);
+    const today = new Date();
+    const todayis = today.toLocaleDateString();
+    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    useEffect(() => {
+        if (keyId) {
+            getUserbyId();
+        }
+    }, [keyId]);
+
+    const getUserbyId = async () => {
+        try {
+            const res = await axios.get(`${URI}${keyId}`);
+            setState(res.data.state);
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    };
+
+    const update = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.put(`${URI}${keyId}`, { statek: true, back: time, datetodayk: todayis });
+            onClose(false);
+            updatedList();
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
+    };
 
     return (
         <>
@@ -31,11 +63,10 @@ export default function ToReturn({ openmodalReturn, onClose }) {
                                             Haz click en Aceptar para devolver la llave
                                         </p>
                                     </div>
-                                    <form className="max-w-md mx-auto mt-5 mb-5 w-full">
+                                    <form onSubmit={update} className="max-w-md mx-auto mt-5 mb-5 w-full">
                                         <button type="submit" className="text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mt-5">Aceptar</button>
-                                        <button className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ml-4" onClick={() => onClose(false)}>Cancelar</button>
+                                        <button type="button" className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ml-4" onClick={() => onClose(false)}>Cancelar</button>
                                     </form>
-
                                 </div>
                             </div>
                         </DialogPanel>

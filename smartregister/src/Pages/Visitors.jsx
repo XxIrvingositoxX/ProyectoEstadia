@@ -5,6 +5,8 @@ import OutVisitor from "../Components/OutVisitor";
 import { Table, Button } from "flowbite-react";
 import AddVisitor from "../Components/AddVisitor";
 import axios from "axios";
+import { FolderIcon } from '@heroicons/react/24/outline';
+
 
 function Visitors() {
     const URI = 'http://localhost:8000/visitors/'
@@ -17,6 +19,7 @@ function Visitors() {
     const [AddVisitorModal, setAddVisitor] = useState(false);
     const [visitors, setVisitors] = useState([]);
     const [activeCount, setActiveCount] = useState(0);
+    const [selectedVisitorId, setSelectedVisitorId] = useState(null);
 
     const getVisitors = async () => {
         const res = await axios.get(URI)
@@ -26,12 +29,22 @@ function Visitors() {
         const res = await axios.get(`${URI}count/state`);
         setActiveCount(res.data.activeCount);
     }
+
+    const handleOutClick = (visitorId) => {
+        setOutModal(true);
+        setSelectedVisitorId(visitorId)
+    }
+
+    const updatedList = () => {
+        getVisitors();
+        getCounts();
+    }
     return (
         <>
             <Header />
             <DateV activeCount={activeCount} />
-            <OutVisitor openmodalOut={OutModal} onClose={setOutModal} />
-            <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} />
+            <OutVisitor openmodalOut={OutModal} onClose={setOutModal} updatedList={updatedList} visitorId={selectedVisitorId} />
+            <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} updatedList={updatedList} />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="flex flex-col-reverse">
@@ -91,7 +104,13 @@ function Visitors() {
                                     <Table.Cell className="p-2">{visitor.exitv === "" ? 'N/A' : visitor.exitv}</Table.Cell>
                                     <Table.Cell className="p-2">{visitor.statev === false ? 'Fuera' : 'Dentro'}</Table.Cell>
                                     <Table.Cell className="p-2 place-content-center">
-                                        <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => setOutModal(true)}>Salida</Button>
+                                        {visitor.statev === true ? (
+                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => handleOutClick(visitor.id)}>Salida</Button>
+
+                                        ) : (
+                                            <FolderIcon className="h-10 w-10 text-sky-800" aria-hidden="true" />
+
+                                        )}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

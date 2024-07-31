@@ -3,7 +3,7 @@ import axios from "axios";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import Success from "./Success";
 
-export default function AddUser({ openmodalUser, onClose }) {
+export default function AddUser({ openmodalUser, onClose, updatedList }) {
 
     const [nocolleague, setNoColleague] = useState('');
     const [name, setName] = useState('');
@@ -33,7 +33,8 @@ export default function AddUser({ openmodalUser, onClose }) {
             setDepartment('');
             setRol('');
             setState('');
-            window.location.reload()
+            onClose(false);
+            updatedList();
         } catch (error) {
             console.error(error);
         }

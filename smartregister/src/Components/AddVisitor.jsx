@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import axios from "axios";
 
-export default function AddVisitor({ openmodalVisitor, onClose }) {
+export default function AddVisitor({ openmodalVisitor, onClose, updatedList }) {
     const today = new Date();
     const todayis = today.toLocaleDateString();
     const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -12,9 +12,9 @@ export default function AddVisitor({ openmodalVisitor, onClose }) {
     const [company, setCompany] = useState('');
     const [identification, setIdentification] = useState('');
     const [comments, setComments] = useState('');
-    const [statev, setStatev] = useState(true);
-    const [datetodayv, setDatetodayv] = useState(todayis);
-    const [entrancev, setEntrancev] = useState(time);
+    const [statev, setStatev] = useState('');
+    const [datetodayv, setDatetodayv] = useState('');
+    const [entrancev, setEntrancev] = useState('');
     const [exitv, setExitv] = useState('');
 
     const store = async (e) => {
@@ -25,9 +25,9 @@ export default function AddVisitor({ openmodalVisitor, onClose }) {
             company,
             identification,
             comments,
-            statev,
-            datetodayv,
-            entrancev,
+            statev: true,
+            datetodayv: todayis,
+            entrancev: time,
             exitv
         };
 
@@ -41,6 +41,7 @@ export default function AddVisitor({ openmodalVisitor, onClose }) {
             setDatetodayv('');
             setEntrancev('');
             setExitv('');
+            updatedList();
         } catch (error) {
             console.error(error)
         }

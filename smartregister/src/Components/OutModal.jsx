@@ -7,6 +7,7 @@ export default function OutModal({ openmodalOut, onClose, colleagueId, updatedLi
     const URI = 'http://localhost:8000/colleagues/';
     const [state, setState] = useState(false);
     const today = new Date();
+    const todayis = today.toLocaleDateString();
     const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
     useEffect(() => {
@@ -27,7 +28,7 @@ export default function OutModal({ openmodalOut, onClose, colleagueId, updatedLi
     const update = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`${URI}${colleagueId}`, { state: false, exitc: time });
+            await axios.put(`${URI}${colleagueId}`, { state: false, exitc: time, datetodayexitc: todayis });
             onClose(false);
             updatedList();
         } catch (error) {

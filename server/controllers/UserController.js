@@ -1,4 +1,5 @@
 import UserModel from "../models/UserModel.js";
+import { Sequelize } from "sequelize";
 
 //Trae todos los usuarios
 export const getAllUsers = async (req, res) => {
@@ -46,5 +47,43 @@ export const updateUser = async (req, res) => {
         })
     } catch (error) {
         res.json({ message: error.message })
+    }
+}
+//Buscar usuarios
+export const searchUsers = async (req, res) => {
+    const { query } = req.query;
+    try {
+        const users = await UserModel.findAll({
+            where: {
+                [Sequelize.Op.or]: [
+                    { nocolleague: { [Sequelize.Op.like]: `%${query}%` } },
+                    { name: { [Sequelize.Op.like]: `%${query}%` } },
+                    { department: { [Sequelize.Op.like]: `%${query}%` } },
+                    { rol: { [Sequelize.Op.like]: `%${query}%` } }
+                ]
+            }
+        });
+        res.json(users);
+    } catch (error) {
+        console.error("Error al realizar la búsqueda:", error);
+        res.status(500).json({ error: error.message });
+    }
+}
+//Filtrar usuarios
+export const filterUsers = async (req, res) => {
+    const { state } = req.query;
+    const { department } = req.query;
+    try {
+        const users = await UserModel.findAll({
+            where: {
+                [Sequelize.Op.or]: [
+                    {state: state === 'Activo'}
+                ]
+            }
+        });
+        res.json(users);
+    } catch (error) {
+        console.log("Error filtrando usuarios: ", error);
+        res.status(500).json({ error: error.message });
     }
 }

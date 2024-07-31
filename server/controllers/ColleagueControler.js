@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize";
 import ColleagueModel from "../models/ColleagueModel.js";
 
 //Trae todos los colaboradores
@@ -48,3 +49,20 @@ export const countColleaguesByState = async (req, res) => {
         res.json({ message: error.message });
     }
 };
+//Buscar colaboradores
+const searColleagues = async (req, res) => {
+    const { query } = req.query;
+    try {
+        const colleagues = await ColleagueModel.findAll({
+            where: {
+                [Sequelize.Op.or]: [
+                    { nocolleaguec: { [Sequelize.Op.like]: `%${query}%` } },
+                    {namec: {[Sequelize.Op.like]: `%${query}%` }},
+                    {}
+                ]
+            }
+        })
+    } catch (error) {
+
+}
+}

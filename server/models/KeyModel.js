@@ -7,6 +7,7 @@ const KeyModel = db.define('keyss', {
     responsible: {type: DataTypes.STRING},
     cuantity: {type: DataTypes.STRING},
     datetodayk: {type: DataTypes.STRING},
+    datetodayexitk: {type: DataTypes.STRING},
     exitk: {type: DataTypes.STRING},
     back: {type: DataTypes.STRING},
     statek: {type: DataTypes.BOOLEAN}

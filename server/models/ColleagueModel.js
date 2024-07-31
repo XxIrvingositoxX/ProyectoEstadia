@@ -6,6 +6,7 @@ const ColleagueModel = db.define('colleagues', {
     namec: { type: DataTypes.STRING },
     departmentc: { type: DataTypes.STRING },
     datetodayc: { type: DataTypes.STRING },
+    datetodayexitc: {type: DataTypes.STRING},
     entrancec: { type: DataTypes.STRING },
     exitc: { type: DataTypes.STRING },
     state: { type: DataTypes.BOOLEAN }

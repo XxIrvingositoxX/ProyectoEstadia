@@ -14,6 +14,8 @@ function Home() {
     const [isIn, setIsIn] = useState(true);
     const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filter, setFilter] = useState("");
 
     useEffect(() => {
         document.title = "Inicio";
@@ -21,9 +23,35 @@ function Home() {
     }, []);
 
     const getUsers = async () => {
-        const res = await axios.get(URI);
-        setUsers(res.data);
+        try {
+            const res = await axios.get(URI);
+            setUsers(Array.isArray(res.data) ? res.data : []);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            setUsers([]);
+        }
     };
+
+    const searchUsers = async (query) => {
+        try {
+            const res = await axios.get(`${URI}search`, { params: { query } });
+            setUsers(Array.isArray(res.data) ? res.data : []);
+        } catch (error) {
+            console.error("Error searching users:", error);
+            setUsers([]);
+        }
+    };
+
+    const handleFilter = async (event)=> {
+        const state = event.target.value;
+        setFilter(state);
+        const res = await axios.get(`${URI}filter`, {
+            params: {
+                state: state,
+            },
+        });
+        setUsers(res.data);
+    }
 
     const handleInClick = (userId) => {
         setIsIn(false);
@@ -37,22 +65,32 @@ function Home() {
         setSelectedUserId(userId);
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        searchUsers(searchQuery);
+    };
+
     const updatedList = () => {
         getUsers();
-    }
+    };
+
     return (
         <>
             <Header />
             <Disable openmodal={DisableModal} onClose={setDisableModal} userId={selectedUserId} updatedList={updatedList} />
             <Enable openmodalEnable={EnableModal} onClose={setEnableModal} userId={selectedUserId} updatedList={updatedList} />
-            <AddUser openmodalUser={AddUserModal} onClose={setAddUserModal} />
+            <AddUser openmodalUser={AddUserModal} onClose={setAddUserModal} updatedList={updatedList} />
             <div className="lg:mx-0 mt-14">
                 <h2 className="w-full text-4xl font-medium tracking-wide text-black sm:text-6xl text-center">Dashboard</h2>
             </div>
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none mt-14">
                 <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse">
-                        <form className="max-w-md mx-auto w-full lg:ml-40">
+                        <form className="max-w-md mx-auto w-full lg:ml-40" onSubmit={handleSearchSubmit}>
                             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
                                 Buscar
                             </label>
@@ -65,7 +103,9 @@ function Home() {
                                 <input
                                     type="search"
                                     id="default-search"
-                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 "
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                                     placeholder="Colaborador..."
                                     required
                                 />
@@ -74,18 +114,22 @@ function Home() {
                                 </button>
                             </div>
                         </form>
-                    </div>
+                    </div> 
                     <div className="flex flex-col-reverse lg:ml-40">
-                        <form className="max-w-md mx-auto w-full">
-                            <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <form className="max-w-md mx-auto w-full" onSubmit={handleSearchSubmit}>
+                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Selecciona una opción
                             </label>
                             <select
+                                value={filter}
+                                onChange={handleFilter}
                                 id="countries"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-4"
                             >
-                                <option value="Dentro">Activo</option>
-                                <option value="Fuera">Inactivo</option>
+                                <option defaultValue="">Selecciona una opción</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                                <option value="Sistemas">Sistemas</option>
                             </select>
                         </form>
                     </div>
@@ -108,31 +152,38 @@ function Home() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            {users.map((user) => (
-                                <Table.Row key={user.id} className="bg-white text-slate-900">
-                                    <Table.Cell className="p-2">{user.nocolleague}</Table.Cell>
-                                    <Table.Cell className="p-2">{user.name}</Table.Cell>
-                                    <Table.Cell className="p-2">{user.department}</Table.Cell>
-                                    <Table.Cell className="p-2">{user.rol}</Table.Cell>
-                                    <Table.Cell className="p-2">
-                                        {user.state === false || null ? 'Inactivo' : 'Activo'}
-                                    </Table.Cell>
-                                    <Table.Cell className="p-2 place-content-center">
-                                        {user.state === false ? (
-                                            <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-24" onClick={() => handleOutClick(user.id)}>
-                                                Habilitar
-                                            </Button>
-                                        ) : (
-                                            <Button className="bg-red-600 hover:bg-red-700 pr-1 pl-1 lg:left-24 text-center" onClick={() => handleInClick(user.id)}>
-                                                Deshabilitar
-                                            </Button>
-                                        )}
+                            {Array.isArray(users) && users.length > 0 ? (
+                                users.map((user) => (
+                                    <Table.Row key={user.id} className="bg-white text-slate-900">
+                                        <Table.Cell className="p-2">{user.nocolleague}</Table.Cell>
+                                        <Table.Cell className="p-2">{user.name}</Table.Cell>
+                                        <Table.Cell className="p-2">{user.department}</Table.Cell>
+                                        <Table.Cell className="p-2">{user.rol}</Table.Cell>
+                                        <Table.Cell className="p-2">
+                                            {user.state === false || user.state === null ? 'Inactivo' : 'Activo'}
+                                        </Table.Cell>
+                                        <Table.Cell className="p-2 place-content-center">
+                                            {user.state === false ? (
+                                                <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-24" onClick={() => handleOutClick(user.id)}>
+                                                    Habilitar
+                                                </Button>
+                                            ) : (
+                                                <Button className="bg-red-600 hover:bg-red-700 pr-1 pl-1 lg:left-24 text-center" onClick={() => handleInClick(user.id)}>
+                                                    Deshabilitar
+                                                </Button>
+                                            )}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                ))
+                            ) : (
+                                <Table.Row>
+                                    <Table.Cell colSpan="6" className="p-2 text-center">
+                                        No se encontraron resultados.
                                     </Table.Cell>
                                 </Table.Row>
-                            ))}
+                            )}
                         </Table.Body>
                     </Table>
-
                 </div>
             </div>
         </>
