@@ -50,19 +50,25 @@ export const countColleaguesByState = async (req, res) => {
     }
 };
 //Buscar colaboradores
-const searColleagues = async (req, res) => {
+export const searColleagues = async (req, res) => {
     const { query } = req.query;
     try {
         const colleagues = await ColleagueModel.findAll({
             where: {
                 [Sequelize.Op.or]: [
                     { nocolleaguec: { [Sequelize.Op.like]: `%${query}%` } },
-                    {namec: {[Sequelize.Op.like]: `%${query}%` }},
-                    {}
+                    { namec: { [Sequelize.Op.like]: `%${query}%` } },
+                    { departmentc: { [Sequelize.Op.like]: `%${query}%` } },
+                    { datetodayc: { [Sequelize.Op.like]: `%${query}%` } },
+                    { datetodayexitc: { [Sequelize.Op.like]: `%${query}%` } },
+                    { entrancec: { [Sequelize.Op.like]: `%${query}%` } },
+                    { exitc: { [Sequelize.Op.like]: `%${query}%` } }
                 ]
             }
-        })
+        });
+        res.json(colleagues)
     } catch (error) {
-
-}
+        console.error("Error al realizar la búsqueda:", error);
+        res.status(500).json({ error: error.message });
+    }
 }

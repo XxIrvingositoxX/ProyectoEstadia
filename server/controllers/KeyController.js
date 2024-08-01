@@ -1,4 +1,5 @@
 import KeyModel from '../models/KeyModel.js'
+import { Sequelize } from 'sequelize'
 
 export const getAllKeys = async (req, res) => {
     try {
@@ -45,3 +46,26 @@ export const countKeysByState = async (req, res) => {
         res.json({ message: error.message });
     }
 };
+export const searchKey = async (req, res) => {
+    const { query } = req.query;
+    try {
+        const keys = await VisitorModel.findAll({
+            where: {
+                [Sequelize.Op.or]: [
+                    { nokey: { [Sequelize.Op.like]: `%${query}%` } },
+                    { namek: { [Sequelize.Op.like]: `%${query}%` } },
+                    { responsible: { [Sequelize.Op.like]: `%${query}%` } },
+                    { cuantity: { [Sequelize.Op.like]: `%${query}%` } },
+                    { datetodayk: { [Sequelize.Op.like]: `%${query}%` } },
+                    { datetodayexitk: { [Sequelize.Op.like]: `%${query}%` } },
+                    { exitk: { [Sequelize.Op.like]: `%${query}%` } },
+                    { back: { [Sequelize.Op.like]: `%${query}%` } }
+                ]
+            }
+        });
+        res.json(keys);
+    } catch (error) {
+        console.error("Error al realizar la búsqueda:", error);
+        res.status(500).json({ error: error.message });
+    }
+}

@@ -8,24 +8,33 @@ import axios from "axios";
 
 function Collegue() {
     const URI = 'http://localhost:8000/colleagues/'
-    useEffect(() => {
-        document.title = "Colaboradores";
-        getColleagues();
-        getCounts();
-    }, []);
     const [ModalIn, setModalIn] = useState(false);
     const [ModalOut, setModalOut] = useState(false);
     const [colleagues, setColleagues] = useState([]);
     const [isIn, setIsIn] = useState(true);
     const [selectedColleagueId, setSelectedColleagueId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     const [activeCount, setActiveCount] = useState(0);
     const [inactiveCount, setInactiveCount] = useState(0);
 
+    useEffect(() => {
+        document.title = "Colaboradores";
+        getColleagues();
+        getCounts();
+    }, []);
     const getColleagues = async () => {
         const res = await axios.get(URI)
         setColleagues(res.data)
     };
-
+    const searchColleagues = async (query) => {
+        try {
+            const res = await axios.get(`${URI}search`, { params: { query } });
+            setColleagues(Array.isArray(res.data) ? res.data : []);
+        } catch (error) {
+            console.error("Error searching users:", error);
+            setColleagues([]);
+        }
+    };
     const getCounts = async () => {
         const res = await axios.get(`${URI}count/state`);
         setActiveCount(res.data.activeCount);
@@ -43,7 +52,13 @@ function Collegue() {
         setModalOut(true);
         setSelectedColleagueId(colleagueId)
     };
-
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        searchColleagues(searchQuery);
+    };
     const updatedList = () => {
         getColleagues();
         getCounts();
@@ -57,7 +72,7 @@ function Collegue() {
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
-                        <form className="max-w-md mx-auto w-full lg:ml-40">
+                        <form className="max-w-md mx-auto w-full lg:ml-40" onSubmit={handleSearchSubmit}>
                             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
                                 Buscar
                             </label>
@@ -70,6 +85,8 @@ function Collegue() {
                                 <input
                                     type="search"
                                     id="default-search"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
                                     className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                                     placeholder="Colaborador..."
                                     required
@@ -131,31 +148,39 @@ function Collegue() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            {colleagues.map((colleague) => (
-                                <Table.Row key={colleague.id} className="bg-white text-slate-900">
-                                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
-                                        {colleague.nocolleaguec}
-                                    </Table.Cell>
-                                    <Table.Cell className="p-2">{colleague.namec}</Table.Cell>
-                                    <Table.Cell className="p-2">{colleague.departmentc}</Table.Cell>
-                                    <Table.Cell className="p-2">{colleague.datetodayc === "" ? 'N/A' : colleague.datetodayc}</Table.Cell>
-                                    <Table.Cell className="p-2">{colleague.datetodayexitc === "" ? 'N/A' : colleague.datetodayexitc}</Table.Cell>
-                                    <Table.Cell className="p-2">{colleague.entrancec === "" ? 'N/A' : colleague.entrancec}</Table.Cell>
-                                    <Table.Cell className="p-2">{colleague.exitc === "" ? 'N/A' : colleague.exitc}</Table.Cell>
-                                    <Table.Cell className="p-2">{colleague.state === false ? 'Fuera' : 'Dentro'}</Table.Cell>
-                                    <Table.Cell className="p-2 place-content-center">
-                                        {colleague.state === false ? (
-                                            <Button className="bg-green-500 hover:bg-green-700 pr-2 pl-3 lg:left-8 text-center" onClick={() => handleInClick(colleague.id)}>
-                                                Entrada
-                                            </Button>
-                                        ) : (
-                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => handleOutClick(colleague.id)}>
-                                                Salida
-                                            </Button>
-                                        )}
+                            {Array.isArray(colleagues) && colleagues.length > 0 ? (
+                                colleagues.map((colleague) => (
+                                    <Table.Row key={colleague.id} className="bg-white text-slate-900">
+                                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
+                                            {colleague.nocolleaguec}
+                                        </Table.Cell>
+                                        <Table.Cell className="p-2">{colleague.namec}</Table.Cell>
+                                        <Table.Cell className="p-2">{colleague.departmentc}</Table.Cell>
+                                        <Table.Cell className="p-2">{colleague.datetodayc === "" ? 'N/A' : colleague.datetodayc}</Table.Cell>
+                                        <Table.Cell className="p-2">{colleague.datetodayexitc === "" ? 'N/A' : colleague.datetodayexitc}</Table.Cell>
+                                        <Table.Cell className="p-2">{colleague.entrancec === "" ? 'N/A' : colleague.entrancec}</Table.Cell>
+                                        <Table.Cell className="p-2">{colleague.exitc === "" ? 'N/A' : colleague.exitc}</Table.Cell>
+                                        <Table.Cell className="p-2">{colleague.state === false ? 'Fuera' : 'Dentro'}</Table.Cell>
+                                        <Table.Cell className="p-2 place-content-center">
+                                            {colleague.state === false ? (
+                                                <Button className="bg-green-500 hover:bg-green-700 pr-2 pl-3 lg:left-8 text-center" onClick={() => handleInClick(colleague.id)}>
+                                                    Entrada
+                                                </Button>
+                                            ) : (
+                                                <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => handleOutClick(colleague.id)}>
+                                                    Salida
+                                                </Button>
+                                            )}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                ))
+                            ) : (
+                                <Table.Row>
+                                    <Table.Cell colSpan="10" className="p-2 text-center">
+                                        No se encontraron resultados.
                                     </Table.Cell>
                                 </Table.Row>
-                            ))}
+                            )}
                         </Table.Body>
                     </Table>
                 </div>

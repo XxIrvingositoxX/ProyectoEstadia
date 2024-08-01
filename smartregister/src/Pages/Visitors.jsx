@@ -10,35 +10,55 @@ import { FolderIcon } from '@heroicons/react/24/outline';
 
 function Visitors() {
     const URI = 'http://localhost:8000/visitors/'
-    useEffect(() => {
-        document.title = "Visitantes";
-        getVisitors();
-        getCounts();
-    }, []);
+
     const [OutModal, setOutModal] = useState(false);
     const [AddVisitorModal, setAddVisitor] = useState(false);
     const [visitors, setVisitors] = useState([]);
     const [activeCount, setActiveCount] = useState(0);
     const [selectedVisitorId, setSelectedVisitorId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
+
+    useEffect(() => {
+        document.title = "Visitantes";
+        getVisitors();
+        getCounts();
+    }, []);
 
     const getVisitors = async () => {
         const res = await axios.get(URI)
         setVisitors(res.data)
-    }
+    };
+    const searchVisitor = async (query) => {
+        try {
+            const res = await axios.get(`${URI}search`, { params: { query } });
+            setVisitors(Array.isArray(res.data) ? res.data : []);
+        } catch (error) {
+            console.error("Error searching users:", error);
+            setVisitors([]);
+        }
+    };
     const getCounts = async () => {
         const res = await axios.get(`${URI}count/state`);
         setActiveCount(res.data.activeCount);
-    }
+    };
 
     const handleOutClick = (visitorId) => {
         setOutModal(true);
         setSelectedVisitorId(visitorId)
-    }
+    };
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        searchVisitor(searchQuery);
+    };
 
     const updatedList = () => {
         getVisitors();
         getCounts();
-    }
+    };
     return (
         <>
             <Header />
@@ -48,7 +68,7 @@ function Visitors() {
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="flex flex-col-reverse">
-                        <form className="max-w-md mx-auto w-full lg:ml-40">
+                        <form className="max-w-md mx-auto w-full lg:ml-40" onSubmit={handleSearchSubmit}>
                             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
                                 Buscar
                             </label>
@@ -61,6 +81,8 @@ function Visitors() {
                                 <input
                                     type="search"
                                     id="default-search"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
                                     className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                                     placeholder="Nombre,empresa..."
                                     required
@@ -93,27 +115,35 @@ function Visitors() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            {visitors.map((visitor) => (
-                                <Table.Row key={visitor.id} className="bg-white text-slate-900">
-                                    <Table.Cell className="p-2">{visitor.namev}</Table.Cell>
-                                    <Table.Cell className="p-2">{visitor.company}</Table.Cell>
-                                    <Table.Cell className="p-2">{visitor.identification}</Table.Cell>
-                                    <Table.Cell className="p-2">{visitor.comments === "" ? 'N/A' : visitor.comments}</Table.Cell>
-                                    <Table.Cell className="p-2">{visitor.datetodayv === "" ? 'N/A' : visitor.datetodayv}</Table.Cell>
-                                    <Table.Cell className="p-2">{visitor.entrancev === "" ? 'N/A' : visitor.entrancev}</Table.Cell>
-                                    <Table.Cell className="p-2">{visitor.exitv === "" ? 'N/A' : visitor.exitv}</Table.Cell>
-                                    <Table.Cell className="p-2">{visitor.statev === false ? 'Fuera' : 'Dentro'}</Table.Cell>
-                                    <Table.Cell className="p-2 place-content-center">
-                                        {visitor.statev === true ? (
-                                            <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-8" onClick={() => handleOutClick(visitor.id)}>Salida</Button>
+                            {Array.isArray(visitors) && visitors.length > 0 ? (
+                                visitors.map((visitor) => (
+                                    <Table.Row key={visitor.id} className="bg-white text-slate-900">
+                                        <Table.Cell className="p-2">{visitor.namev}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.company}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.identification}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.comments === "" ? 'N/A' : visitor.comments}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.datetodayv === "" ? 'N/A' : visitor.datetodayv}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.entrancev === "" ? 'N/A' : visitor.entrancev}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.exitv === "" ? 'N/A' : visitor.exitv}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.statev === false ? 'Fuera' : 'Dentro'}</Table.Cell>
+                                        <Table.Cell className="p-2 place-content-center">
+                                            {visitor.statev === true ? (
+                                                <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-6" onClick={() => handleOutClick(visitor.id)}>Salida</Button>
 
-                                        ) : (
-                                            <FolderIcon className="h-10 w-10 text-sky-800" aria-hidden="true" />
+                                            ) : (
+                                                <FolderIcon className="h-10 w-10 text-sky-800 lg:ml-14 md:ml-8" aria-hidden="true" />
 
-                                        )}
+                                            )}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                ))
+                            ) : (
+                                <Table.Row>
+                                    <Table.Cell colSpan="10" className="p-2 text-center">
+                                        No se encontraron resultados.
                                     </Table.Cell>
                                 </Table.Row>
-                            ))}
+                            )}
                         </Table.Body>
                     </Table>
                 </div>

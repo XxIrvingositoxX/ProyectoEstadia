@@ -1,4 +1,5 @@
 import VisitorModel from '../models/VisitorModel.js'
+import { Sequelize } from 'sequelize'
 
 export const getAllVisitors = async (req, res) => {
     try {
@@ -50,5 +51,26 @@ export const countVisitorsByState = async (req, res) => {
         res.json({ activeCount })
     } catch (error) {
         res.json({message: error.message});
+    }
+}
+export const searchVisitor = async (req, res)=> {
+    const { query } = req.query;
+    try {
+        const visitors = await VisitorModel.findAll({
+            where: {
+                [Sequelize.Op.or]: [
+                    { namev: { [Sequelize.Op.like]: `%${query}%` } },
+                    { company: { [Sequelize.Op.like]: `%${query}%` } },
+                    { identification: { [Sequelize.Op.like]: `%${query}%` } },
+                    { datetodayv: { [Sequelize.Op.like]: `%${query}%` } },
+                    { entrancev: { [Sequelize.Op.like]: `%${query}%` } },
+                    { exitv: { [Sequelize.Op.like]: `%${query}%` } }
+                ]
+            }
+        });
+        res.json(visitors)
+    } catch (error) {
+        console.error("Error al realizar la búsqueda:", error);
+        res.status(500).json({ error: error.message });
     }
 }

@@ -72,7 +72,6 @@ export const searchUsers = async (req, res) => {
 //Filtrar usuarios
 export const filterUsers = async (req, res) => {
     const { state } = req.query;
-    const { department } = req.query;
     try {
         const users = await UserModel.findAll({
             where: {

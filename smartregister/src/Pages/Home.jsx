@@ -164,11 +164,11 @@ function Home() {
                                         </Table.Cell>
                                         <Table.Cell className="p-2 place-content-center">
                                             {user.state === false ? (
-                                                <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-24" onClick={() => handleOutClick(user.id)}>
+                                                <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-20" onClick={() => handleOutClick(user.id)}>
                                                     Habilitar
                                                 </Button>
                                             ) : (
-                                                <Button className="bg-red-600 hover:bg-red-700 pr-1 pl-1 lg:left-24 text-center" onClick={() => handleInClick(user.id)}>
+                                                <Button className="bg-red-600 hover:bg-red-700 pr-1 pl-1 lg:left-20 text-center" onClick={() => handleInClick(user.id)}>
                                                     Deshabilitar
                                                 </Button>
                                             )}
