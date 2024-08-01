@@ -1,21 +1,78 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import DateK from "../Components/DateK";
 import { Table, Button } from "flowbite-react";
+import ToLend from "../Components/ToLend";
+import axios from "axios";
+import ToReturn from "../Components/ToReturn";
 
 function Keys() {
+    const URI = 'http://localhost:8000/keys/'
+
+    const [openLend, setLend] = useState(false);
+    const [openReturn, setReturn] = useState(false)
+    const [keys, setKeys] = useState([]);
+    const [activeCount, setActiveCount] = useState(0);
+    const [inactiveCount, setInactiveCount] = useState(0);
+    const [selectedKeyId, setSelectedKeyId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
     useEffect(() => {
         document.title = "Llaves";
+        getKeys();
+        getCount();
     }, []);
+
+    const getKeys = async () => {
+        const res = await axios.get(URI)
+        setKeys(res.data);
+    }
+    const searchKey = async (query) => {
+        try {
+            const res = await axios.get(`${URI}search`, { params: { query } });
+            setKeys(Array.isArray(res.data) ? res.data : []);
+        } catch (error) {
+            console.error("Error searching users:", error);
+            setKeys([]);
+        }
+    };
+    const handleLendClick = (keyId) => {
+        setSelectedKeyId(keyId);
+        setLend(true);
+    }
+
+    const handleReturnClick = (keyId) => {
+        setSelectedKeyId(keyId);
+        setReturn(true)
+    }
+
+    const getCount = async () => {
+        const res = await axios.get(`${URI}count/state`);
+        setActiveCount(res.data.activeCount);
+        setInactiveCount(res.data.inactiveCount);
+    }
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        searchKey(searchQuery);
+    };
+    const updatedList = () => {
+        getKeys();
+        getCount();
+    }
     return (
         <>
             <Header />
-            <DateK/>
+            <DateK activeCount={activeCount} inactiveCount={inactiveCount} />
+            <ToReturn openmodalReturn={openReturn} onClose={() => setReturn(false)} keyId={selectedKeyId} updatedList={updatedList} />
+            <ToLend openmodalLend={openLend} onClose={() => setLend(false)} keyId={selectedKeyId} updatedList={updatedList} />
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
                 <dl className="grid grid-cols-2 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="flex flex-col-reverse ">
-                        <form className="max-w-md mx-auto w-full lg:ml-40">
-                            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                        <form className="max-w-md mx-auto w-full lg:ml-40" onSubmit={handleSearchSubmit}>
+                            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
                                 Buscar
                             </label>
                             <div className="relative">
@@ -27,7 +84,9 @@ function Keys() {
                                 <input
                                     type="search"
                                     id="default-search"
-                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                                     placeholder="No.Llave,Nombre..."
                                     required
                                 />
@@ -39,12 +98,12 @@ function Keys() {
                     </div>
                     <div className="flex flex-col-reverse lg:ml-40">
                         <form className="max-w-md mx-auto w-full">
-                            <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900">
                                 Selecciona una opción
                             </label>
                             <select
                                 id="countries"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-4"
                             >
                                 <option value="Prestadas">Prestadas</option>
                                 <option value="Disponibles">Disponibles</option>
@@ -61,28 +120,46 @@ function Keys() {
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
                             <Table.HeadCell className="p-2">Responsable</Table.HeadCell>
                             <Table.HeadCell className="p-2">Cantidad</Table.HeadCell>
-                            <Table.HeadCell className="p-2">Fecha</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Fecha de salida</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Fecha de regreso</Table.HeadCell>
                             <Table.HeadCell className="p-2">Salida</Table.HeadCell>
                             <Table.HeadCell className="p-2">Regreso</Table.HeadCell>
                             <Table.HeadCell className="p-2">Estado</Table.HeadCell>
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white p-2">
-                                    24
-                                </Table.Cell>
-                                <Table.Cell className="p-2">Sky Gym</Table.Cell>
-                                <Table.Cell className="p-2">Julio Paredes Arceo</Table.Cell>
-                                <Table.Cell className="p-2">1</Table.Cell>
-                                <Table.Cell className="p-2">02/07/2024</Table.Cell>
-                                <Table.Cell className="p-2">09:12:33</Table.Cell>
-                                <Table.Cell className="p-2">17:45:33</Table.Cell>
-                                <Table.Cell className="p-2 text-green-500 font-semibold">Disponible</Table.Cell>
-                                <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-12">Prestar</Button>
-                                </Table.Cell>
-                            </Table.Row>
+                            {Array.isArray(keys) && keys.length > 0 ? (
+                                keys.map((key) => (
+                                    <Table.Row key={key.id} className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
+                                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 p-2">
+                                            {key.nokey}
+                                        </Table.Cell>
+                                        <Table.Cell className="p-2">{key.namek}</Table.Cell>
+                                        <Table.Cell className="p-2">{key.responsible === "" ? 'N/A' : key.responsible}</Table.Cell>
+                                        <Table.Cell className="p-2">{key.cuantity}</Table.Cell>
+                                        <Table.Cell className="p-2">{key.datetodayexitk === "" ? 'N/A' : key.datetodayexitk}</Table.Cell>
+                                        <Table.Cell className="p-2">{key.datetodayk === "" ? 'N/A' : key.datetodayk}</Table.Cell>
+                                        <Table.Cell className="p-2">{key.exitk === "" ? 'N/A' : key.exitk}</Table.Cell>
+                                        <Table.Cell className="p-2">{key.back === "" ? 'N/A' : key.back}</Table.Cell>
+                                        <Table.Cell className="p-2 text-green-500 font-semibold">{key.statek === true ? 'Disponible' : 'Prestada'}</Table.Cell>
+                                        <Table.Cell className="p-2 place-content-center">
+                                            {key.statek === true ? (
+                                                <Button className="bg-green-500 hover:bg-green-700 pr-4 pl-4 lg:left-8" onClick={() => handleLendClick(key.id)}>Prestar</Button>
+
+                                            ) : (
+                                                <Button className="bg-red-600 hover:bg-red-700 pr-2 pl-3 lg:left-8" onClick={() => handleReturnClick(key.id)}>Devolver</Button>
+
+                                            )}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                ))
+                            ) : (
+                                <Table.Row>
+                                    <Table.Cell colSpan="10" className="p-2 text-center">
+                                        No se encontraron resultados.
+                                    </Table.Cell>
+                                </Table.Row>
+                            )}
                         </Table.Body>
                     </Table>
                 </div>

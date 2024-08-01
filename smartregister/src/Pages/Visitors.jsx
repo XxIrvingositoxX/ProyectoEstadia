@@ -4,36 +4,86 @@ import DateV from "../Components/DateV";
 import OutVisitor from "../Components/OutVisitor";
 import { Table, Button } from "flowbite-react";
 import AddVisitor from "../Components/AddVisitor";
+import axios from "axios";
+import { FolderIcon } from '@heroicons/react/24/outline';
+
 
 function Visitors() {
-    useEffect(() => {
-        document.title = "Visitantes";
-    }, []);
+    const URI = 'http://localhost:8000/visitors/'
+
     const [OutModal, setOutModal] = useState(false);
     const [AddVisitorModal, setAddVisitor] = useState(false);
+    const [visitors, setVisitors] = useState([]);
+    const [activeCount, setActiveCount] = useState(0);
+    const [selectedVisitorId, setSelectedVisitorId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
+
+    useEffect(() => {
+        document.title = "Visitantes";
+        getVisitors();
+        getCounts();
+    }, []);
+
+    const getVisitors = async () => {
+        const res = await axios.get(URI)
+        setVisitors(res.data)
+    };
+    const searchVisitor = async (query) => {
+        try {
+            const res = await axios.get(`${URI}search`, { params: { query } });
+            setVisitors(Array.isArray(res.data) ? res.data : []);
+        } catch (error) {
+            console.error("Error searching users:", error);
+            setVisitors([]);
+        }
+    };
+    const getCounts = async () => {
+        const res = await axios.get(`${URI}count/state`);
+        setActiveCount(res.data.activeCount);
+    };
+
+    const handleOutClick = (visitorId) => {
+        setOutModal(true);
+        setSelectedVisitorId(visitorId)
+    };
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        searchVisitor(searchQuery);
+    };
+
+    const updatedList = () => {
+        getVisitors();
+        getCounts();
+    };
     return (
         <>
             <Header />
-            <DateV />
-            <OutVisitor openmodalOut={OutModal} onClose={setOutModal}/>
-            <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} />
-            <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none mt-14">
-                <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-3 lg:grid-cols-4">
+            <DateV activeCount={activeCount} />
+            <OutVisitor openmodalOut={OutModal} onClose={setOutModal} updatedList={updatedList} visitorId={selectedVisitorId} />
+            <AddVisitor openmodalVisitor={AddVisitorModal} onClose={setAddVisitor} updatedList={updatedList} />
+            <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
+                <dl className="grid grid-cols-3 gap-8 sm:mt-1 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="flex flex-col-reverse">
-                        <form className="max-w-md mx-auto w-full lg:ml-40">
-                            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                        <form className="max-w-md mx-auto w-full lg:ml-40" onSubmit={handleSearchSubmit}>
+                            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only">
                                 Buscar
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <svg className="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                     </svg>
                                 </div>
                                 <input
                                     type="search"
                                     id="default-search"
-                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                                     placeholder="Nombre,empresa..."
                                     required
                                 />
@@ -43,22 +93,8 @@ function Visitors() {
                             </div>
                         </form>
                     </div>
-                    <div className="flex flex-col-reverse lg:ml-40">
-                        <form className="max-w-md mx-auto w-full">
-                            <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Selecciona una opción
-                            </label>
-                            <select
-                                id="countries"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
-                                <option value="Dentro">Dentro</option>
-                                <option value="Fuera">Fuera</option>
-                            </select>
-                        </form>
-                    </div>
                     <div className="flex flex-col-reverse w-28">
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={()=> setAddVisitor(true)}>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-medium rounded-lg text-sm p-4 w-full max-w-md mx-auto" onClick={() => setAddVisitor(true)}>
                             Agregar
                         </button>
                     </div>
@@ -70,6 +106,8 @@ function Visitors() {
                         <Table.Head className="text-lg">
                             <Table.HeadCell className="p-2">Nombre</Table.HeadCell>
                             <Table.HeadCell className="p-2">Empresa</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Tipo de identificación</Table.HeadCell>
+                            <Table.HeadCell className="p-2">Comentarios</Table.HeadCell>
                             <Table.HeadCell className="p-2">Fecha</Table.HeadCell>
                             <Table.HeadCell className="p-2">Entrada</Table.HeadCell>
                             <Table.HeadCell className="p-2">Salida</Table.HeadCell>
@@ -77,17 +115,35 @@ function Visitors() {
                             <Table.HeadCell className="p-2">Acción</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y text-base">
-                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 text-slate-900">
-                                <Table.Cell className="p-2">Gerardo Gomez Palacios</Table.Cell>
-                                <Table.Cell className="p-2">Ama de llaves</Table.Cell>
-                                <Table.Cell className="p-2">29/06/2024</Table.Cell>
-                                <Table.Cell className="p-2">10:24:23</Table.Cell>
-                                <Table.Cell className="p-2">6:22:32</Table.Cell>
-                                <Table.Cell className="p-2">Fuera</Table.Cell>
-                                <Table.Cell className="p-2 place-content-center">
-                                    <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-16" onClick={()=> setOutModal(true)}>Salida</Button>
-                                </Table.Cell>
-                            </Table.Row>
+                            {Array.isArray(visitors) && visitors.length > 0 ? (
+                                visitors.map((visitor) => (
+                                    <Table.Row key={visitor.id} className="bg-white text-slate-900">
+                                        <Table.Cell className="p-2">{visitor.namev}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.company}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.identification}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.comments === "" ? 'N/A' : visitor.comments}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.datetodayv === "" ? 'N/A' : visitor.datetodayv}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.entrancev === "" ? 'N/A' : visitor.entrancev}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.exitv === "" ? 'N/A' : visitor.exitv}</Table.Cell>
+                                        <Table.Cell className="p-2">{visitor.statev === false ? 'Fuera' : 'Dentro'}</Table.Cell>
+                                        <Table.Cell className="p-2 place-content-center">
+                                            {visitor.statev === true ? (
+                                                <Button className="bg-red-600 hover:bg-red-700 pr-4 pl-4 lg:left-6" onClick={() => handleOutClick(visitor.id)}>Salida</Button>
+
+                                            ) : (
+                                                <FolderIcon className="h-10 w-10 text-sky-800 lg:ml-14 md:ml-8" aria-hidden="true" />
+
+                                            )}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                ))
+                            ) : (
+                                <Table.Row>
+                                    <Table.Cell colSpan="10" className="p-2 text-center">
+                                        No se encontraron resultados.
+                                    </Table.Cell>
+                                </Table.Row>
+                            )}
                         </Table.Body>
                     </Table>
                 </div>

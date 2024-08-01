@@ -1,8 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { UsersIcon } from '@heroicons/react/24/outline';
 
-export default function OutVisitor({ openmodalOut, onClose }) {
+export default function OutVisitor({ openmodalOut, onClose, updatedList, visitorId }) {
+
+    const URI = 'http://localhost:8000/visitors/';
+    const [state, setState] = useState(false);
+    const today = new Date();
+    const todayis = today.toLocaleDateString();
+    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    useEffect(() => {
+        if (visitorId) {
+            getUserbyId();
+        }
+    }, [visitorId]);
+
+    const getUserbyId = async () => {
+        try {
+            const res = await axios.get(`${URI}${visitorId}`);
+            setState(res.data.state);
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    };
+
+    const update = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.put(`${URI}${visitorId}`, { statev: false, exitv: time });
+            onClose(false);
+            updatedList();
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
+    };
+
 
     return (
         <>
@@ -29,29 +63,31 @@ export default function OutVisitor({ openmodalOut, onClose }) {
                                         </DialogTitle>
                                         <div className="mt-2">
                                             <p className="text-sm text-gray-500">
-                                                ¿Estás seguro de que salió el visitante? Haz click en Salida si el visitante está fuera de la propiedad
+                                                ¿Estás seguro de que salió el visitante? Haz click en Aceptar si el visitante está fuera de la propiedad
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                <button
-                                    type="button"
-                                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto"
-                                    onClick={() => onClose(false)} 
-                                >
-                                    Salida
-                                </button>
-                                <button
-                                    type="button"
-                                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                    onClick={() => onClose(false)}
-                                    data-autofocus
-                                >
-                                    Cancelar
-                                </button>
-                            </div>
+                            <form onSubmit={update}>
+                                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                    <button
+                                        type="submit"
+                                        className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto"
+                                        onClick={() => onClose(false)}
+                                    >
+                                        Aceptar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                        onClick={() => onClose(false)}
+                                        data-autofocus
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
                         </DialogPanel>
                     </div>
                 </div>
